@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.nudgerewriten.R;
 import com.example.nudgerewriten.activities.OrdersActivity;
+import com.example.nudgerewriten.activities.ViewStore;
 import com.example.nudgerewriten.activities.VisitsActivity;
 import com.example.nudgerewriten.adapters.ProductAdapter;
 
@@ -31,6 +32,7 @@ public class HomeFragment extends Fragment {
     TextView visitId,orderId;
     List<String> Products = new ArrayList<>();
     Toolbar toolbar;
+    TextView viewclcick;
 
     ProductAdapter adapter;
 
@@ -62,7 +64,7 @@ public class HomeFragment extends Fragment {
         visitId = getView().findViewById(R.id.visit_id);
 
         toolbar = getView().findViewById(R.id.toolbar);
-
+        viewclcick=getView().findViewById(R.id.view_title);
         toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -94,6 +96,12 @@ public class HomeFragment extends Fragment {
                 startActivity(new Intent(getActivity(), VisitsActivity.class));
             }
         });
-
+        viewclcick.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getActivity(), ViewStore.class));
+            }
+        });
     }
+
 }
