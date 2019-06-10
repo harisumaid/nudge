@@ -101,8 +101,11 @@ public class FarmerListFragment extends Fragment {
 
                     for(DocumentSnapshot d: list) {
                         FarmerModel farmer = d.toObject(FarmerModel.class);
-                        farmers.add(farmer);
+                        farmer.setName(capitalizeName(farmer.getName()));
                         data.add(farmer.getName());
+                        Collections.sort(data);
+                        int index = data.indexOf(farmer.getName());
+                        farmers.add(index,farmer);
                     }
 
                     Collections.sort(farmers, new Comparator<FarmerModel>() {
@@ -115,7 +118,7 @@ public class FarmerListFragment extends Fragment {
                     for(FarmerModel f: farmers) {
                         Log.i("Farmers are ",f.getName());
                     }
-
+                    Log.d("capitalize", "onSuccess: "+ data);
                     adapter_contact_list_1.notifyDataSetChanged();
                 }
             }
@@ -200,5 +203,27 @@ public class FarmerListFragment extends Fragment {
 
     public int farmerSort(FarmerModel f1,FarmerModel f2) {
         return f1.getName().compareTo(f2.getName());
+    }
+
+    public String capitalizeName(String originalName){
+        if (originalName == null || originalName.isEmpty()){
+            return originalName;
+        }
+        StringBuilder finalName = new StringBuilder();
+        boolean convertNext = true;
+
+        for (char c: originalName.toCharArray()) {
+            if (Character.isSpaceChar(c)){
+                convertNext=true;
+            }
+            else if (convertNext){
+                c = Character.toTitleCase(c);
+                convertNext=false;
+            }
+            else
+                c = Character.toLowerCase(c);
+            finalName.append(c);
+        }
+        return finalName.toString();
     }
 }

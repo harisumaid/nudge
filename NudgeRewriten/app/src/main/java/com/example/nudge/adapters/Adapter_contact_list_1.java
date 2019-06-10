@@ -15,6 +15,7 @@ import android.widget.Toast;
 
 import com.example.nudge.R;
 import com.example.nudge.models.FarmerModel;
+import com.google.common.primitives.Chars;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -60,8 +61,6 @@ public class Adapter_contact_list_1 extends RecyclerView.Adapter<Adapter_contact
                 index++;
             }
 
-        Arrays.sort(newData);
-
         for(int ind=0;ind<newData.length;ind++)
             Log.i("Data is ",newData[ind]);
 
@@ -72,8 +71,10 @@ public class Adapter_contact_list_1 extends RecyclerView.Adapter<Adapter_contact
             hash_Set.add(c.charAt(0));
         }
 
-        List<Character> chars = new ArrayList<>(hash_Set);
+        Set<Character> chars1 = new TreeSet<>(hash_Set);
+        List<Character> chars = new ArrayList<>(chars1);
 
+        Log.i("Data", "onBindViewHolder: " + chars);
         index = 0;
         for(String name: newData) {
               if(name.charAt(0)==chars.get(i))
