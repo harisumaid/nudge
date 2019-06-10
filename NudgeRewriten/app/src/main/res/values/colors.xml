@@ -5,4 +5,6 @@
     <color name="tabIconColor">#68CD3D</color>
     <color name="colorAccent">#6CDF3A</color>
     <color name="bottomTabBarInactiveTextColor">#6D6D6D</color>
+    <color name="GrayBackground">#29000000</color>
+    <color name="textColor">#636363</color>
 </resources>
