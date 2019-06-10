@@ -16,8 +16,8 @@ public class products implements Parcelable {
     }
 
     public products(String productname, String productComany, int price, int productimage) {
-        Productname = productname;
-        ProductComany = productComany;
+        this.Productname = productname;
+        this.ProductComany = productComany;
         this.price = price;
         this.productimage = productimage;
     }

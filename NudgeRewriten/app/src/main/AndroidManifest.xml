@@ -37,6 +37,7 @@
             android:theme="@style/AppTheme" />
         <activity android:name=".activities.MainActivity" />
         <activity android:name=".activities.SelectedCropActity" />
+        <activity android:name=".activities.SelectFarmerActivity" android:parentActivityName=".activities.ViewStore"/>
     </application>
 
 </manifest>

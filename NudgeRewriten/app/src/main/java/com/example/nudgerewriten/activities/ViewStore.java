@@ -1,124 +1,242 @@
 package com.example.nudgerewriten.activities;
 
+import android.animation.Animator;
+import android.app.Dialog;
+import android.content.Context;
+import android.content.Intent;
+import android.media.Image;
+import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.nudgerewriten.R;
+import com.example.nudgerewriten.adapters.Adapter_select_farmer_1;
 import com.example.nudgerewriten.adapters.ProductAdapter;
 import com.example.nudgerewriten.adapters.ProductViewAdapter;
+import com.example.nudgerewriten.models.OrderModel;
 import com.example.nudgerewriten.models.products;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
-public class ViewStore extends AppCompatActivity implements View.OnLongClickListener {
+public class ViewStore extends AppCompatActivity {
 
-    public boolean is_item_checked=false;
-    TextView counterTextview;
     public RecyclerView prodRcvId;
     public RecyclerView.LayoutManager layoutManager;
+    public List<String> selected_farmer= new ArrayList<>();
+
+//    Products (LIST) variable is the variable that is used for keeping the product details
     List<products> Products = new ArrayList<>();
+
+//    variables about placing the orders
+    public String productName;
+    String orderReceivingDate;
+
     private Toolbar toolbar;
+    ImageView viewstore_backbtn;
     private ProductViewAdapter adapter;
+    ConstraintLayout viewstore_base_layout;
+    ProgressBar progress_bar_viewstore;
+    Context context;
+
+//    Dialog selectFarmer;
+
+    FirebaseFirestore db;
     ArrayList<products> selectionlist;
-    int count=0;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_store);
-        toolbar= (Toolbar) findViewById(R.id.itempurcharge);
-        setSupportActionBar(toolbar);
-        counterTextview=(TextView) findViewById(R.id.counterItem);
-        counterTextview.setVisibility(View.GONE);
-        for(int i=0;i<6; i++ ) {
-            Products.add(new products("Product "+i,"Company "+i,(1+i)*100 ,R.drawable.fertilizer));
-        }
+        toolbar= (Toolbar) findViewById(R.id.viewstore_toolbar);
+        progress_bar_viewstore=findViewById(R.id.progress_bar_viewstore);
+        viewstore_base_layout = findViewById(R.id.viewstore_base_layout);
+        context = this;
+        viewstore_backbtn=findViewById(R.id.viewstore_backbtn);
+//        selectFarmer=new Dialog(this);
+
+// setting onclick listener to work as back button.
+        viewstore_backbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+// making the viewstore_base_layout invisible while its loading and fading it in when the fetching of data is complete
+        viewstore_base_layout.setVisibility(View.VISIBLE);
+        final long shortAnimationDuration = getResources().getInteger(
+                android.R.integer.config_shortAnimTime);
+
+        db = FirebaseFirestore.getInstance();
+        db.collection("products")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()){
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
+                                if (documentSnapshot.exists()) {
+                                Products.add(new products((String)documentSnapshot.get("product_name"),(String)documentSnapshot.get("product_company"),((Long)documentSnapshot.get("product_price")).intValue() ,R.drawable.fertilizer));
+                                }
+                            }
+                        }
+                        else{
+                            Log.d("firebase", "Error getting documents: ", task.getException());
+                        }
+                        adapter = new ProductViewAdapter(Products,context);
+                        prodRcvId.setAdapter(adapter);
+                        Toast.makeText(ViewStore.this, "fetched", Toast.LENGTH_SHORT).show();
+                        viewstore_base_layout.animate()
+                                .alpha(1f)
+                                .setDuration(shortAnimationDuration)
+                                .setListener(null);
+
+                        progress_bar_viewstore.animate()
+                                .alpha(0f)
+                                .setDuration(shortAnimationDuration)
+                                .setListener(new Animator.AnimatorListener() {
+                                    @Override
+                                    public void onAnimationStart(Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationEnd(Animator animation) {
+                                        progress_bar_viewstore.setVisibility(View.GONE);
+                                    }
+
+                                    @Override
+                                    public void onAnimationCancel(Animator animation) {
+
+                                    }
+
+                                    @Override
+                                    public void onAnimationRepeat(Animator animation) {
+
+                                    }
+                                });
+                    }
+                });
+
         selectionlist = new ArrayList<>();
         prodRcvId=findViewById(R.id.recyclerViewStore);
         layoutManager = new LinearLayoutManager(this);
         prodRcvId.setHasFixedSize(true);
         prodRcvId.setLayoutManager(layoutManager);
-        adapter = new ProductViewAdapter(Products,this);
-        prodRcvId.setAdapter(adapter);
+    }
+
+    public void showPopUps(View v) {
+        Intent intent = new Intent(context, SelectFarmerActivity.class);
+        intent.putExtra("productName", productName);
+        intent.putExtra("product_receiving_date",receivingDate(productName));
+        startActivity(intent);
+
+    }
+
+    public String receivingDate(String productId){
+        final String[] orderReceivingDate = {""};
+        //       fetching the receiving date value by the productId supplied from placeOrder() method.
+
+         db.collection("products").document(productId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+            if (task.isSuccessful()) {
+            // Document found in the offline cache
+            DocumentSnapshot document = task.getResult();
+            orderReceivingDate[0] = (String) document.get("receiving_date");
+            Log.d("firebase", "onReceivingDate "+ orderReceivingDate[0]);
+        } else {
+            Log.d("error", "Cached get failed: ", task.getException());
+        }
+
+            }
+        });
+
+         return orderReceivingDate[0];
     }
 
 
 
-    @Override
-    public boolean onLongClick(View v) {
-        toolbar.getMenu().clear();
-        toolbar.inflateMenu(R.menu.itemselect_menu);
-        counterTextview.setVisibility(View.VISIBLE);
-        is_item_checked=true;
-        adapter.notifyDataSetChanged();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        return true;
-    }
-    public void prepareselection(View view,int pos){
 
-        if(((CheckBox)view).isChecked()){
-            selectionlist.add(Products.get(pos));
-            count +=1;
-            updateCounnter(count);
-        }
-        else {
-            selectionlist.remove(Products.get(pos));
-            count-=1;
-            updateCounnter(count);
-        }
+//        THIS PART HAS BEEN COMENTED OUT DUE TO FAILURE WHILE SHOWING SELECT_FARMER AS DIALOG
+//        MAY BE DONE LATER
 
-    }
-    public void updateCounnter(int count)
-    {
-        if(count == 0)
-        {
-            counterTextview.setText("0 item Selected");
-        }
-        else {
-            counterTextview.setText(count+"item Selected");
-        }
-    }
+//        select_farmer=new ArrayList<>();//supplying the name of farmer after fetching
+//
+//        selectFarmer.setContentView(R.layout.activity_select_farmer);
+//
+//        final RecyclerView dialogRecycler = selectFarmer.findViewById(R.id.dialog_recycler);//Main recycler view
+//
+//        final Button select_farmer_cancel_button = selectFarmer.findViewById(R.id.select_farmer_cancel_button);//Cancel Button
+//        select_farmer_cancel_button.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                selectFarmer.dismiss();
+//            }
+//        });
+//
+//
+////        Fetching farmers list from database
+//        db.collection("agents").document("nudge@123").collection("farmers")
+//                .get()
+//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+//                    @Override
+//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+//                        if (task.isSuccessful()){
+//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
+//                                if (documentSnapshot.exists()) {
+//// here fetching of data from collection of farmer is done where name and image of each farmer is fetched
+//                                    Log.d("firebase", "onComplete: " + select_farmer);
+//                                    select_farmer.add((String) documentSnapshot.get("name"));
+//
+//                                }
+//                            }
+//                        }
+//                        else{
+//                            Log.d("firebase", "Error getting documents: ", task.getException());
+//                        }
+//                        Collections.sort(select_farmer);
+//                        Log.d("firebase", "onComplete: "+select_farmer);
+//                        Toast.makeText(context, "starting to fetch", Toast.LENGTH_SHORT).show();
+//
+//// Calling the adapter that would show the list of farmers to select from
+//                        dialogRecycler.setLayoutManager(new LinearLayoutManager(context));
+//                        dialogRecycler.setHasFixedSize(true);
+//                        dialogRecycler.setAdapter(new Adapter_select_farmer_1(select_farmer));
+//                    }
+//
+//                });
+//
+//        selectFarmer.show();
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId()==R.id.item_delete)
-        {
-            clearAction();
-            ProductViewAdapter productadapter= (ProductViewAdapter) adapter;
-            productadapter.updateAdapter(selectionlist);
 
-        }
-        else if (item.getItemId()== android.R.id.home)
-        {
-            clearAction();
-            adapter.notifyDataSetChanged();
-        }
-        return true;
-    }
-
-    public void clearAction(){
-        is_item_checked= false;
-        toolbar.getMenu().clear();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-        counterTextview.setText(View.GONE);
-        counterTextview.setText("0 item Selected");
-    }
-    @Override
-    public void onBackPressed() {
-        if (is_item_checked) {
-            clearAction();
-            adapter.notifyDataSetChanged();
-        }
-        else {
-            super.onBackPressed();
-        }
-    }
 }
