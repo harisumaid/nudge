@@ -9,14 +9,11 @@
     <android.support.v7.widget.Toolbar
         android:id="@+id/crop_market_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="90dp"
-        android:background="@drawable/searchbar_gradient"
-        app:layout_constraintBottom_toTopOf="@id/recyclerview"
+        android:layout_height="wrap_content"
+        android:background="@drawable/gradient"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0">
+        app:layout_constraintStart_toStartOf="parent">
 
         <android.support.v7.widget.CardView
             android:layout_width="match_parent"
@@ -30,6 +27,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:iconifiedByDefault="false"
+                app:queryBackground="@android:color/transparent"
                 app:queryHint="@string/crop_market_hint" />
         </android.support.v7.widget.CardView>
 
@@ -37,14 +35,14 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="90dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:scrollbars="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/crop_market_toolbar">
 
     </android.support.v7.widget.RecyclerView>
 

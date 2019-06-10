@@ -16,7 +16,7 @@
             android:theme="@style/AppTheme.AppBarOverlay">
 
             <android.support.design.widget.CollapsingToolbarLayout
-                android:id="@+id/collapsing_toolbar"
+                android:id="@+id/collapsing_toolbar2"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
@@ -28,7 +28,7 @@
                 app:title="Ram Lal">
 
                 <ImageView
-                    android:id="@+id/imgView"
+                    android:id="@+id/agent_img"
                     android:layout_width="match_parent"
                     android:layout_height="200dp"
                     android:fitsSystemWindows="true"
@@ -50,7 +50,7 @@
             app:layout_behavior="android.support.design.widget.AppBarLayout$ScrollingViewBehavior"
             android:scrollbars="vertical"
             android:id="@+id/scrollView"
-            app:layout_constraintTop_toBottomOf="@+id/imageView"
+            app:layout_constraintTop_toBottomOf="@+id/farmer_photo"
             android:layout_height="match_parent"
             android:fillViewport="true">
 
@@ -94,15 +94,14 @@
                             app:layout_constraintTop_toBottomOf="@+id/textView" />
 
                         <ProgressBar
-                            android:id="@+id/progressBar"
+                            android:id="@+id/progress"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="32dp"
                             android:layout_marginEnd="32dp"
                             android:max="6000"
-                            android:progress="1050"
-                            android:progressDrawable="@drawable/progressbargradient"
+                            android:progress="3000"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="@+id/textView"
                             app:layout_constraintTop_toBottomOf="@+id/divider5" />
@@ -113,8 +112,8 @@
                             android:layout_height="0dp"
                             android:layout_marginTop="20dp"
                             android:background="?android:attr/listDivider"
-                            app:layout_constraintBottom_toTopOf="@+id/progressBar"
-                            app:layout_constraintStart_toStartOf="@+id/progressBar"
+                            app:layout_constraintBottom_toTopOf="@+id/progress"
+                            app:layout_constraintStart_toStartOf="@+id/progress"
                             app:layout_constraintTop_toBottomOf="@+id/divider5" />
 
                         <TextView
@@ -133,8 +132,8 @@
                             android:layout_width="1dp"
                             android:layout_height="10dp"
                             android:background="?android:attr/listDivider"
-                            app:layout_constraintEnd_toEndOf="@+id/progressBar"
-                            app:layout_constraintTop_toBottomOf="@+id/progressBar" />
+                            app:layout_constraintEnd_toEndOf="@+id/progress"
+                            app:layout_constraintTop_toBottomOf="@+id/progress" />
 
                         <TextView
                             android:id="@+id/limit"
@@ -188,7 +187,7 @@
                             app:layout_constraintTop_toBottomOf="@+id/textView14" />
 
                         <TextView
-                            android:id="@+id/textView15"
+                            android:id="@+id/bronze"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
@@ -201,24 +200,24 @@
                             app:layout_constraintTop_toBottomOf="@+id/divider8" />
 
                         <TextView
-                            android:id="@+id/textView16"
+                            android:id="@+id/silver"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginEnd="8dp"
                             android:layout_marginBottom="16dp"
-                            android:background="@drawable/member_circle"
+                            android:background="@drawable/border_circle"
                             android:gravity="center_horizontal|center_vertical"
                             android:text="Silver"
-                            android:textColor="@android:color/white"
+                            android:textColor="@color/colorPrimaryDark"
                             app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toStartOf="@+id/textView17"
-                            app:layout_constraintStart_toEndOf="@+id/textView15"
+                            app:layout_constraintEnd_toStartOf="@+id/gold"
+                            app:layout_constraintStart_toEndOf="@+id/bronze"
                             app:layout_constraintTop_toBottomOf="@+id/divider8" />
 
                         <TextView
-                            android:id="@+id/textView17"
+                            android:id="@+id/gold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
@@ -227,7 +226,7 @@
                             android:text="Gold"
                             android:textColor="@color/colorPrimaryDark"
                             app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintTop_toTopOf="@+id/textView16" />
+                            app:layout_constraintTop_toTopOf="@+id/silver" />
 
                         <View
                             android:id="@+id/divider9"
@@ -236,11 +235,11 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:background="@color/colorPrimaryDark"
-                            app:layout_constraintBottom_toBottomOf="@+id/textView15"
-                            app:layout_constraintEnd_toStartOf="@+id/textView16"
+                            app:layout_constraintBottom_toBottomOf="@+id/bronze"
+                            app:layout_constraintEnd_toStartOf="@+id/silver"
                             app:layout_constraintHorizontal_bias="0.0"
-                            app:layout_constraintStart_toEndOf="@+id/textView15"
-                            app:layout_constraintTop_toTopOf="@+id/textView15"
+                            app:layout_constraintStart_toEndOf="@+id/bronze"
+                            app:layout_constraintTop_toTopOf="@+id/bronze"
                             app:layout_constraintVertical_bias="0.508" />
 
                         <View
@@ -250,10 +249,10 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginEnd="8dp"
                             android:background="@color/colorPrimaryDark"
-                            app:layout_constraintBottom_toBottomOf="@+id/textView16"
-                            app:layout_constraintEnd_toStartOf="@+id/textView17"
-                            app:layout_constraintStart_toEndOf="@+id/textView16"
-                            app:layout_constraintTop_toTopOf="@+id/textView16" />
+                            app:layout_constraintBottom_toBottomOf="@+id/silver"
+                            app:layout_constraintEnd_toStartOf="@+id/gold"
+                            app:layout_constraintStart_toEndOf="@+id/silver"
+                            app:layout_constraintTop_toTopOf="@+id/silver" />
 
 
                     </android.support.constraint.ConstraintLayout>

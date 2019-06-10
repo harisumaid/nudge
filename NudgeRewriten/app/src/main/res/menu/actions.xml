@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/actions_edit"
+        android:id="@+id/actions_add"
         android:orderInCategory="100"
         android:title="Edit Contact" />
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -20,32 +21,6 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-
-            <TextView
-                android:id="@+id/textView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/roboto_regular"
-                android:hapticFeedbackEnabled="true"
-                android:text="Add Crop"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="@+id/divider"
-                app:layout_constraintTop_toTopOf="parent" />
-
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:fontFamily="@font/roboto_regular"
-                android:hapticFeedbackEnabled="true"
-                android:text="Crop Variety"
-                android:textSize="16sp"
-                app:layout_constraintStart_toStartOf="@+id/textView2"
-                app:layout_constraintTop_toBottomOf="@+id/divider" />
-
             <View
                 android:id="@+id/divider"
                 android:layout_width="0dp"
@@ -54,7 +29,7 @@
                 android:background="?android:attr/listDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView2" />
+                app:layout_constraintTop_toBottomOf="@+id/crop_name" />
 
             <View
                 android:id="@+id/divider2"
@@ -64,7 +39,7 @@
                 android:background="?android:attr/listDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView3" />
+                app:layout_constraintTop_toBottomOf="@+id/crop_variety" />
 
             <View
                 android:id="@+id/divider3"
@@ -77,13 +52,17 @@
                 app:layout_constraintTop_toBottomOf="@+id/farm_size_id" />
 
             <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/crop_schedule_date"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginBottom="16dp"
                 android:hapticFeedbackEnabled="true"
                 android:text="Seeding Date"
                 android:textSize="16sp"
+                app:layout_constraintBottom_toTopOf="@+id/divider4"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/farm_size_id"
                 app:layout_constraintTop_toBottomOf="@+id/divider3" />
 
@@ -95,43 +74,53 @@
                 android:background="?android:attr/listDivider"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
-
-            <ImageView
-                android:id="@+id/crop_drop_down"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/divider"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24px" />
-
-            <ImageView
-                android:id="@+id/crop_varietY-down"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="16dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divider"
-                app:srcCompat="@drawable/ic_baseline_arrow_drop_down_24px" />
+                app:layout_constraintTop_toBottomOf="@+id/crop_schedule_date" />
 
             <EditText
                 android:id="@+id/farm_size_id"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="8dp"
                 android:background="@null"
                 android:cursorVisible="false"
                 android:ems="10"
+                android:imeOptions="actionDone"
                 android:hint="Farm Size"
                 android:inputType="textPersonName"
                 android:textCursorDrawable="@null"
-                app:layout_constraintStart_toStartOf="@+id/textView3"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="@+id/crop_variety"
                 app:layout_constraintTop_toBottomOf="@+id/divider2" />
+
+            <Spinner
+                android:id="@+id/crop_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/roboto_regular"
+                android:hapticFeedbackEnabled="true"
+                android:hint="Crop Name"
+                android:entries="@array/crops_list"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/crop_variety"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="16dp"
+                android:fontFamily="@font/roboto_regular"
+                android:hapticFeedbackEnabled="true"
+                android:hint="Crop Variety"
+                android:entries="@array/crops_list"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="@+id/crop_name"
+                app:layout_constraintTop_toBottomOf="@+id/divider" />
 
 
         </android.support.constraint.ConstraintLayout>

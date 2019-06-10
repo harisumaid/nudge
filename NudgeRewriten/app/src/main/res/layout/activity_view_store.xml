@@ -6,66 +6,66 @@
     android:layout_height="match_parent"
     tools:context=".activities.ViewStore"
     android:theme="@style/Theme.AppCompat.Light.NoActionBar">
-<android.support.v4.widget.NestedScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-   <android.support.constraint.ConstraintLayout
-       android:id="@+id/viewstore_base_layout"
-       android:layout_width="match_parent"
-       android:layout_height="match_parent">
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/viewstore_base_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-       <android.support.v7.widget.Toolbar
-           android:id="@+id/viewstore_toolbar"
-           android:layout_width="match_parent"
-           android:layout_height="?attr/actionBarSize"
-           android:background="@drawable/gradient"
-           app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintHorizontal_bias="0.0"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toTopOf="parent">
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/viewstore_toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="@drawable/gradient"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-           <ImageView
-               android:id="@+id/viewstore_backbtn"
-               android:layout_width="30dp"
-               android:layout_height="30dp"
-               android:layout_margin="8dp"
-               android:background="?attr/selectableItemBackground"
-               app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
+                <ImageView
+                    android:id="@+id/viewstore_backbtn"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_margin="8dp"
+                    android:background="?attr/selectableItemBackground"
+                    app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
 
-           <TextView
-               android:id="@+id/toolbar_title"
-               style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:fontFamily="@font/roboto_regular"
-               android:padding="4dp"
-               android:text="Store"
-               android:textColor="@android:color/white"
-               android:textSize="22sp"
-               android:textStyle="bold"
-               tools:layout_editor_absoluteX="48dp"
-               tools:layout_editor_absoluteY="11dp" />
+                <TextView
+                    android:id="@+id/toolbar_title"
+                    style="@style/TextAppearance.AppCompat.Widget.ActionBar.Title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
+                    android:padding="4dp"
+                    android:text="Store"
+                    android:textColor="@android:color/white"
+                    android:textSize="22sp"
+                    android:textStyle="bold"
+                    tools:layout_editor_absoluteX="48dp"
+                    tools:layout_editor_absoluteY="11dp" />
 
-       </android.support.v7.widget.Toolbar>
+            </android.support.v7.widget.Toolbar>
 
 
-       <android.support.v7.widget.RecyclerView
-           android:id="@+id/recyclerViewStore"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:layout_marginTop="90dp"
-           android:scrollbars="vertical"
-           app:layout_constraintBottom_toBottomOf="parent"
-           app:layout_constraintEnd_toEndOf="parent"
-           app:layout_constraintHorizontal_bias="0.0"
-           app:layout_constraintStart_toStartOf="parent"
-           app:layout_constraintTop_toTopOf="@id/viewstore_toolbar"
-           app:layout_constraintVertical_bias="0.0">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recyclerViewStore"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="90dp"
+                android:scrollbars="vertical"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/viewstore_toolbar"
+                app:layout_constraintVertical_bias="0.0">
 
-       </android.support.v7.widget.RecyclerView>
+            </android.support.v7.widget.RecyclerView>
 
-    </android.support.constraint.ConstraintLayout>
-</android.support.v4.widget.NestedScrollView>
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v4.widget.NestedScrollView>
 
     <ProgressBar
         android:id="@+id/progress_bar_viewstore"
