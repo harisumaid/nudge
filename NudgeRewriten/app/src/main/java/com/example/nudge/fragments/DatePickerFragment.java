@@ -79,6 +79,6 @@ public class DatePickerFragment extends DialogFragment
         String formattedDate = df.format(chosenDate);
 
         // Invoke Main Activity's processDatePickerResult() method.
-        activity.processDatePickerResult(year, month, day,formattedDate);
+        activity.processDatePickerResult(year, month, day,formattedDate,chosenDate);
     }
 }

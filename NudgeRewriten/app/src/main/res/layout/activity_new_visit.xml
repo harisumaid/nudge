@@ -46,6 +46,7 @@
         android:layout_marginTop="20dp"
         android:hapticFeedbackEnabled="true"
         android:text="Search Contact"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/visit_title"
         app:layout_constraintTop_toBottomOf="@+id/view" />
 
@@ -112,7 +113,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
         android:fontFamily="@font/roboto_medium"
-        android:text="Mon 29 April,2019  "
+        android:text="Choose Date"
+        android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/textView10"
         app:layout_constraintTop_toBottomOf="@+id/textView10" />
 
@@ -120,13 +122,15 @@
         android:id="@+id/time_btn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="08:00"
-        android:visibility="visible"
+        android:layout_marginEnd="8dp"
         android:fontFamily="@font/roboto_medium"
+        android:text="Choose Time"
+        android:textSize="16sp"
+        android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="@+id/date_btn"
         app:layout_constraintEnd_toEndOf="@+id/switch1"
-        app:layout_constraintStart_toStartOf="@+id/switch1"
-        app:layout_constraintTop_toTopOf="@+id/date_btn" />
+        app:layout_constraintTop_toTopOf="@+id/date_btn"
+        app:layout_constraintVertical_bias="0.0" />
 
     <EditText
         android:id="@+id/visit_title"

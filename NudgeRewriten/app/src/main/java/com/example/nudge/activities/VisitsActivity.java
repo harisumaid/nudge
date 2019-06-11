@@ -10,21 +10,35 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.nudge.R;
 import com.example.nudge.adapters.VisitsAdapter;
+import com.example.nudge.models.VisitModel;
+import com.example.nudge.utils.SharedPrefUtils;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class VisitsActivity extends AppCompatActivity {
 
     ImageView backBtn;
-    RecyclerView todaysRcv,pendingRcv;
-    VisitsAdapter adapter1,adapter2;
-    List<String> farmerNames = new ArrayList<>();
-    List<String> visitTitles = new ArrayList<>();
-    List<String> date = new ArrayList<>();
+    RecyclerView todaysRcv,pendingRcv,upcomingRcv;
+    VisitsAdapter adapter1,adapter2,adapter3;
+    List<VisitModel> pendingVisits = new ArrayList<>();
+    List<VisitModel> todayVisits = new ArrayList<>();
+    List<VisitModel> upcomingVisits = new ArrayList<>();
+
+    TextView pending_sample_text,today_sample_text,upcoming_sample_text;
+
+    FirebaseFirestore db;
+    SharedPrefUtils sharedPrefUtils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,37 +50,65 @@ public class VisitsActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.back_btn1);
         todaysRcv = findViewById(R.id.todays_rcv);
         pendingRcv = findViewById(R.id.pending_rcv);
+        upcomingRcv = findViewById(R.id.upcoming_rcv);
 
-        farmerNames.add("John Doe");
-        farmerNames.add("Pablo Escobar");
-        farmerNames.add("Skyler White");
-        farmerNames.add("Walter White");
-        farmerNames.add("Daft Punk");
+        pending_sample_text = findViewById(R.id.pending_sample_text);
+        today_sample_text = findViewById(R.id.today_sample_text);
+        upcoming_sample_text = findViewById(R.id.upcoming_sample_text);
 
-        visitTitles.add("Fertilizer Requirement");
-        visitTitles.add("Crop Details");
-        visitTitles.add("Crop Fertilizer Time");
-        visitTitles.add("Fertilizer for Plant");
-        visitTitles.add("Fertilizer Requirement");
+        db = FirebaseFirestore.getInstance();
+        sharedPrefUtils = new SharedPrefUtils(this);
 
-        date.add("29th April,2019");
-        date.add("29th May,2019");
-        date.add("29th June,2019");
-        date.add("29th July,2019");
-        date.add("29th August,2019");
+        db.collection("agents").document(sharedPrefUtils.readAgentId()).collection("visits").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if(queryDocumentSnapshots.size()!=0) {
+                    List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+
+                    for(DocumentSnapshot d: list) {
+                        VisitModel visit = d.toObject(VisitModel.class);
+
+                        if(visit.getVisit_status()) continue;
+
+                        if(visit.getVisitDate().after(new Date())) {
+                            upcomingVisits.add(visit);
+                        } else if(visit.getVisitDate().before(new Date())) {
+                            pendingVisits.add(visit);
+                        } else {
+                            todayVisits.add(visit);
+                        }
+
+                    }
+
+                    if(upcomingVisits.isEmpty()) upcoming_sample_text.setVisibility(View.VISIBLE);
+                    if(pendingVisits.isEmpty()) pending_sample_text.setVisibility(View.VISIBLE);
+                    if(todayVisits.isEmpty()) today_sample_text.setVisibility(View.VISIBLE);
+
+                    adapter1.notifyDataSetChanged();
+                    adapter2.notifyDataSetChanged();
+                    adapter3.notifyDataSetChanged();
+                }
+            }
+        });
 
         todaysRcv.setLayoutManager(new LinearLayoutManager(this));
         todaysRcv.setItemAnimator(new DefaultItemAnimator());
         todaysRcv.setNestedScrollingEnabled(false);
 
-        adapter1 = new VisitsAdapter(farmerNames,visitTitles,date,this);
+        adapter1 = new VisitsAdapter(todayVisits,this);
         todaysRcv.setAdapter(adapter1);
 
-        adapter2 = new VisitsAdapter(new ArrayList<String>(farmerNames.subList(1,3)), new ArrayList<String>(visitTitles.subList(1,3)),new ArrayList<String>(date.subList(1,3)),this);
+        adapter2 = new VisitsAdapter(pendingVisits,this);
         pendingRcv.setLayoutManager(new LinearLayoutManager(this));
         pendingRcv.setItemAnimator(new DefaultItemAnimator());
         pendingRcv.setNestedScrollingEnabled(false);
         pendingRcv.setAdapter(adapter2);
+
+        adapter3 = new VisitsAdapter(upcomingVisits,this);
+        upcomingRcv.setLayoutManager(new LinearLayoutManager(this));
+        upcomingRcv.setItemAnimator(new DefaultItemAnimator());
+        upcomingRcv.setNestedScrollingEnabled(false);
+        upcomingRcv.setAdapter(adapter3);
 
         FloatingActionButton fab = findViewById(R.id.visits_fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -83,5 +125,4 @@ public class VisitsActivity extends AppCompatActivity {
             }
         });
     }
-
 }
