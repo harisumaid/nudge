@@ -1,6 +1,7 @@
 package com.example.nudge.activities;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -22,6 +23,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,7 +38,8 @@ public class SelectFarmerActivity extends AppCompatActivity {
     public List<OrderModel> orderPlaced = new ArrayList<>();
     public String productName;
     String productReceivingDate;
-
+    SharedPreferences preferences;
+    SharedPreferences.Editor editor;
     Context context;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -193,7 +196,19 @@ public class SelectFarmerActivity extends AppCompatActivity {
 //            HAVE TO ADD orderPlaced LIST TO SHARED PREFERENCE FOR REFLECTING IN ORDERS ACTIVITY
             orderPlaced.add(new OrderModel(individualFarmer,productName,productReceivingDate));
         }
+        savedSharedpref(orderPlaced);
 
+    }
+    public  void savedSharedpref(List<OrderModel> orderPlaced)
+    {
+        ((OrderPlaced) this.getApplication()).addOrderPlaced(orderPlaced);
+        preferences = getSharedPreferences("MyPref",MODE_PRIVATE);
+        editor= preferences.edit();
+        Gson gson= new Gson();
+        String json = gson.toJson(((OrderPlaced) this.getApplication()).getOrderPlaced());
+        editor.putString("OrderPlaced", json);
+        Log.i("TAG", "placeOrder: SharedPrefs Saved ");
+        editor.commit();
     }
 
 

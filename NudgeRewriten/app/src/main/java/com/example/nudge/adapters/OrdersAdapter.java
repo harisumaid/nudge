@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.nudge.R;
+import com.example.nudge.models.OrderModel;
 
 import java.util.List;
 
@@ -89,5 +90,16 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.myViewHold
             childView = itemView.findViewById(R.id.visit_child_view);
             orderCard = itemView.findViewById(R.id.visit_order_card);
         }
+    }
+    public  void updateAdapter(List<OrderModel> list)
+    {
+        for(OrderModel orderModel: list)
+        {
+            this.farmers.add(orderModel.getOrderedFarmerName());
+            this.dates.add(orderModel.getOrderedReceivingDate());
+            this.orderTypes.add("Ordered By:");
+            this.flag.add(1);
+        }
+        notifyDataSetChanged();
     }
 }

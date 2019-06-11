@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.example.nudgerewriten"
+    android:targetSandboxVersion="2"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="21"
+        android:targetSdkVersion="28" />
+
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <application
+        android:allowBackup="true"
+        android:appComponentFactory="android.support.v4.app.CoreComponentFactory"
+        android:debuggable="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="Nudge"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:testOnly="true"
+        android:theme="@style/AppTheme" >
+        <activity android:name="com.example.nudgerewriten.activities.CropTimeline" />
+        <activity android:name="com.example.nudgerewriten.activities.ScheduleCropActivity" />
+        <activity
+            android:name="com.example.nudgerewriten.activities.FarmerProfileActivity"
+            android:theme="@style/FarmerStyle" />
+        <activity android:name="com.example.nudgerewriten.activities.NewVisitActivity" />
+        <activity android:name="com.example.nudgerewriten.activities.OrdersActivity" />
+        <activity android:name="com.example.nudgerewriten.activities.VisitsActivity" />
+        <activity
+            android:name="com.example.nudgerewriten.activities.SplashScreenActivity"
+            android:theme="@style/AppTheme1" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.example.nudgerewriten.activities.LoginActivity"
+            android:theme="@style/AppTheme" />
+        <activity android:name="com.example.nudgerewriten.activities.MainActivity" />
+        <activity android:name="com.example.nudgerewriten.activities.SelectedCropActity" />
+
+        <provider
+            android:name="com.rhexgomez.typer.common.TyperProvider"
+            android:authorities="com.example.nudgerewriten.com.rhexgomez.typer.roboto"
+            android:exported="false" />
+        <provider
+            android:name="com.squareup.picasso.PicassoProvider"
+            android:authorities="com.example.nudgerewriten.com.squareup.picasso"
+            android:exported="false" />
+        <provider
+            android:name="com.android.tools.ir.server.InstantRunContentProvider"
+            android:authorities="com.example.nudgerewriten.com.android.tools.ir.server.InstantRunContentProvider"
+            android:multiprocess="true" />
+    </application>
+
+</manifest>
