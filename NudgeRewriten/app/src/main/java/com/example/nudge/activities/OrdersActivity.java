@@ -1,5 +1,6 @@
 package com.example.nudge.activities;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -10,6 +11,11 @@ import android.widget.Button;
 import android.widget.ImageView;
 import com.example.nudge.R;
 import com.example.nudge.adapters.OrdersAdapter;
+import com.example.nudge.models.OrderModel;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,6 +30,8 @@ public class OrdersActivity extends AppCompatActivity {
     List<String> orderTypes = new ArrayList<>();
     List<String> dates = new ArrayList<>();
     List<Integer> flag = new ArrayList<>();
+    List<OrderModel> orderModelList;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +43,7 @@ public class OrdersActivity extends AppCompatActivity {
         deliveredBtn = findViewById(R.id.delivered_btn);
         backBtn = findViewById(R.id.back_btn1);
         orderRcv = findViewById(R.id.order_rcv);
+        preferences = getSharedPreferences("MyPref",MODE_PRIVATE);
 
         farmers.add("John Doe");
         farmers.add("Pablo Escobar");
@@ -85,6 +94,7 @@ public class OrdersActivity extends AppCompatActivity {
                 flag.clear();
                 flag.add(1);
                 adapter.notifyDataSetChanged();
+                loadSharedPref();
             }
         });
 
@@ -119,5 +129,17 @@ public class OrdersActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
+    }
+    public  void  loadSharedPref(){
+        Gson gson = new Gson();
+        String json = preferences.getString("OrderPlaced",null);
+        Type type = new TypeToken<ArrayList<OrderModel>>() {}.getType();
+        orderModelList= gson.fromJson(json,type);
+        if(orderModelList == null)
+        {
+            orderModelList= new ArrayList<>();
+        }
+        adapter.updateAdapter(orderModelList);
+        adapter.notifyDataSetChanged();
     }
 }

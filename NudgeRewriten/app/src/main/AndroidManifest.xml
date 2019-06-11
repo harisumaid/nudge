@@ -18,7 +18,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:replace="android:label">
+        tools:replace="android:label"
+        android:name=".activities.OrderPlaced">
         <activity android:name=".activities.SelectFarmerActivity"></activity>
         <activity android:name=".activities.ViewStore" />
         <activity android:name=".activities.AddFarmerActivity" />
