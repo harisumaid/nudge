@@ -18,6 +18,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,6 +27,12 @@ import com.example.nudge.activities.OrdersActivity;
 import com.example.nudge.activities.ViewStore;
 import com.example.nudge.activities.VisitsActivity;
 import com.example.nudge.adapters.ProductAdapter;
+import com.example.nudge.models.products;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +43,15 @@ public class HomeFragment extends Fragment {
 
     RecyclerView prodRcvId;
     TextView visitId,orderId,viewAll;
-    List<String> Products = new ArrayList<>();
+    List<products> Products = new ArrayList<>();
     Toolbar toolbar;
+    ProgressBar progressBar_home;
 
     ImageView visitImg,orderImg;
 
     ProductAdapter adapter;
+
+    FirebaseFirestore db;
 
     @Nullable
     @Override
@@ -49,8 +59,6 @@ public class HomeFragment extends Fragment {
         View v =  inflater.inflate(R.layout.fragment_home, container, false);
         setHasOptionsMenu(true);
 
-        for(int i =1;i<=6;i++)
-            Products.add("Product "+i);
         return v;
     }
 
@@ -66,6 +74,8 @@ public class HomeFragment extends Fragment {
         orderImg = getView().findViewById(R.id.order_image);
 
         viewAll = getView().findViewById(R.id.view_title);
+
+        progressBar_home = getView().findViewById(R.id.progressBar_home);
 
         viewAll.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,9 +114,27 @@ public class HomeFragment extends Fragment {
             }
         });
 
-        prodRcvId.setLayoutManager(new GridLayoutManager(getActivity(),2,GridLayoutManager.HORIZONTAL,false));
+        prodRcvId.setLayoutManager(new GridLayoutManager(getActivity(),1,GridLayoutManager.HORIZONTAL,false));
         adapter = new ProductAdapter(Products,getActivity());
         prodRcvId.setAdapter(adapter);
+
+        db = FirebaseFirestore.getInstance();
+
+        db.collection("products").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+
+                if(!queryDocumentSnapshots.isEmpty()) {
+                    List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                    for(DocumentSnapshot d: list) {
+                        products product = d.toObject(products.class);
+                        Products.add(product);
+                    }
+                }
+                adapter.notifyDataSetChanged();
+                progressBar_home.setVisibility(View.INVISIBLE);
+            }
+        });
 
         orderImg.setOnClickListener(new View.OnClickListener() {
             @Override

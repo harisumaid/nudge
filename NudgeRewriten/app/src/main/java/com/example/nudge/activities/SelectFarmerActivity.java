@@ -129,6 +129,10 @@ public class SelectFarmerActivity extends AppCompatActivity {
 
         SearchView select_farmer_searchview = findViewById(R.id.select_farmer_searchview);
 
+        select_farmer_searchview.setFocusable(false);
+        select_farmer_searchview.setIconified(false);
+        select_farmer_searchview.clearFocus();
+
         select_farmer_searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
             List<FarmerModel> selectedFarmers = new ArrayList<>();
@@ -200,14 +204,14 @@ public class SelectFarmerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Toast.makeText(context, "Clicked", Toast.LENGTH_SHORT).show();
-                List<String> names = adapter.getNames();
+                List<String> ids = adapter.getNames();
 
                 Intent returnIntent = new Intent();
 
-                returnIntent.putStringArrayListExtra("result", (ArrayList<String>) names);
+                returnIntent.putStringArrayListExtra("result", (ArrayList<String>) ids);
                 setResult(Activity.RESULT_OK,returnIntent);
-                placeOrder(names);
+
+                placeOrder(ids);
                 finish();
 
 

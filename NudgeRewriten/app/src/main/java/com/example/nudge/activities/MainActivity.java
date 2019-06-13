@@ -1,5 +1,6 @@
 package com.example.nudge.activities;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +9,7 @@ import android.view.MenuItem;
 import android.support.design.widget.BottomNavigationView;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.example.nudge.R;
 import com.example.nudge.fragments.CropAndMarketFragment;
@@ -17,6 +19,8 @@ import com.example.nudge.fragments.ProfileFragment;
 import com.example.nudge.fragments.ServicesFragment;
 
 public class MainActivity extends AppCompatActivity {
+
+    String id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +38,11 @@ public class MainActivity extends AppCompatActivity {
 
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, new HomeFragment()).commit();
 
+        id = getIntent().getStringExtra("ID");
+
+        if(id!=null) {
+            botNav.setSelectedItemId(R.id.farmer);
+        }
     }
     private BottomNavigationView.OnNavigationItemSelectedListener navlistener =
             new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -64,4 +73,12 @@ public class MainActivity extends AppCompatActivity {
                 }
 
             };
+
+    @Override
+    public void onBackPressed() {
+        Intent a = new Intent(Intent.ACTION_MAIN);
+        a.addCategory(Intent.CATEGORY_HOME);
+        a.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(a);
+    }
 }

@@ -13,12 +13,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.example.nudge.R;
 import com.example.nudge.activities.FarmerProfileActivity;
+import com.example.nudge.activities.VisitsActivity;
 import com.example.nudge.models.FarmerModel;
 import com.example.nudge.models.VisitModel;
 import com.example.nudge.utils.SharedPrefUtils;
@@ -40,6 +42,7 @@ public class VisitsAdapter extends RecyclerView.Adapter<VisitsAdapter.myViewHold
     static int currentPosition = -1;
     List<VisitModel> visits = new ArrayList<>();
     String phone_num,id;
+    VisitsAdapter adapter;
     FirebaseFirestore db;
     SharedPrefUtils sharedPrefUtils;
 
@@ -48,6 +51,7 @@ public class VisitsAdapter extends RecyclerView.Adapter<VisitsAdapter.myViewHold
         this.context = context;
         sharedPrefUtils = new SharedPrefUtils(context);
         db = FirebaseFirestore.getInstance();
+        this.adapter = this;
     }
 
     @NonNull
@@ -92,11 +96,15 @@ public class VisitsAdapter extends RecyclerView.Adapter<VisitsAdapter.myViewHold
         myViewHolder.profileTextBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                myViewHolder.farmerPb.setVisibility(View.VISIBLE);
+
                 db.collection("agents").document(sharedPrefUtils.readAgentId()).collection("farmers").document(visits.get(i).getFarmer_id()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         Intent intent = new Intent(context, FarmerProfileActivity.class);
                         intent.putExtra("FarmerInfo",documentSnapshot.toObject(FarmerModel.class));
+                        myViewHolder.farmerPb.setVisibility(View.INVISIBLE);
                         context.startActivity(intent);
                     }
                 });
@@ -115,7 +123,7 @@ public class VisitsAdapter extends RecyclerView.Adapter<VisitsAdapter.myViewHold
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(context, "Status changed", Toast.LENGTH_SHORT).show();
-                        notifyDataSetChanged();
+                        context.startActivity(new Intent(context, VisitsActivity.class));
                     }
                 }).addOnFailureListener(new OnFailureListener() {
                     @Override
@@ -154,6 +162,7 @@ public class VisitsAdapter extends RecyclerView.Adapter<VisitsAdapter.myViewHold
         ConstraintLayout visitChildView;
         CardView visitCard;
         ImageView callBtn;
+        ProgressBar farmerPb;
 
         public myViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -167,6 +176,7 @@ public class VisitsAdapter extends RecyclerView.Adapter<VisitsAdapter.myViewHold
             visitDate = itemView.findViewById(R.id.visit_date);
             visitCard = itemView.findViewById(R.id.visit_order_card);
             visitChildView = itemView.findViewById(R.id.visit_child_view);
+            farmerPb = itemView.findViewById(R.id.farmer_pb);
         }
     }
 }

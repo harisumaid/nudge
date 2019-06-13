@@ -60,15 +60,14 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.myViewHold
 
         Glide.with(context).load(imageMap.get(modelList.get(i).getOrderedProductId())).into(myViewHolder.productImage);
 
-
         myViewHolder.farmerName.setText(modelList.get(i).getOrderedFarmerName());
 
         myViewHolder.visitTitle.setText(modelList.get(i).getOrderedProductName());
 
-
-
         if (flag.get(0)==0) {           //for ordered tab
+
             myViewHolder.type.setText("Order for :");
+
             myViewHolder.checksvg.setVisibility(View.GONE);
             myViewHolder.orderBtn.setVisibility(View.GONE);
             myViewHolder.orderDate.setText((modelList.get(i).getOrderedDate()));

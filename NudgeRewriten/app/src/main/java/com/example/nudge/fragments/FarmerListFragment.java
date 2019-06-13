@@ -1,11 +1,13 @@
 package com.example.nudge.fragments;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.res.ComplexColorCompat;
@@ -18,6 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.nudge.R;
@@ -46,6 +49,8 @@ public class FarmerListFragment extends Fragment {
     List<String> data = new ArrayList<>();
     Adapter_contact_list_1 adapter_contact_list_1;
     Context context;
+    ConstraintLayout contentFarmersDefault;
+    ProgressBar farmerFragmentPb;
 
     @Nullable
     @Override
@@ -60,6 +65,9 @@ public class FarmerListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        getActivity().getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+
         final RecyclerView farmer_contact_recycler = view.findViewById(R.id.farmer_contact_recycler);
 
         db=FirebaseFirestore.getInstance();
@@ -68,6 +76,12 @@ public class FarmerListFragment extends Fragment {
                 .setPersistenceEnabled(true)
                 .build();
         db.setFirestoreSettings(settings);
+
+        contentFarmersDefault = view.findViewById(R.id.content_farmers_default);
+        farmerFragmentPb = view.findViewById(R.id.farmer_fragment_pb);
+
+        final long shortAnimationDuration = getResources().getInteger(
+                android.R.integer.config_shortAnimTime);
 
         farmer_contact_recycler.setNestedScrollingEnabled(false);
         fabAdd = view.findViewById(R.id.fab_add);
@@ -121,6 +135,40 @@ public class FarmerListFragment extends Fragment {
                     Log.d("capitalize", "onSuccess: "+ data);
                     adapter_contact_list_1.notifyDataSetChanged();
                 }
+
+
+                contentFarmersDefault.animate()
+                        .alpha(1f)
+                        .setDuration(shortAnimationDuration)
+                        .setListener(null);
+
+                contentFarmersDefault.setVisibility(View.VISIBLE);
+
+                farmerFragmentPb.animate()
+                        .alpha(0f)
+                        .setDuration(shortAnimationDuration)
+                        .setListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                farmerFragmentPb.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+
+                            }
+                        });
+
             }
         });
 

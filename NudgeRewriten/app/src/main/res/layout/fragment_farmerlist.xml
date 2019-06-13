@@ -6,6 +6,11 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent">
 
+    <ProgressBar
+        android:id="@+id/farmer_fragment_pb"
+        android:layout_gravity="center_vertical|center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 
 
     <include layout="@layout/content_farmers" />

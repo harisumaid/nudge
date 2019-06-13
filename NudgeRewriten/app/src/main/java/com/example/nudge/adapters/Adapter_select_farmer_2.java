@@ -85,6 +85,29 @@ public class Adapter_select_farmer_2 extends RecyclerView.Adapter<Adapter_select
 
 
             adapter_select_farmer_2_viewHolder.select_farmer_cardview.setOnClickListener(new View.OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+
+                    Toast.makeText(context, "Card is clicked.", Toast.LENGTH_SHORT).show();
+
+                    if ( adapter_select_farmer_2_viewHolder.select_farmer_checkbox.isChecked()) {
+
+                        adapter_select_farmer_2_viewHolder.select_farmer_checkbox.setChecked(true);
+                        ids.add(farmers.get(i).getId());
+                        Toast.makeText(context, "Total ids are "+ids.size(), Toast.LENGTH_SHORT).show();
+
+                    }
+                    else
+                    {
+                        adapter_select_farmer_2_viewHolder.select_farmer_checkbox.setChecked(false);
+                        ids.remove(farmers.get(i).getId());
+                    }
+                }
+            });
+
+
+            adapter_select_farmer_2_viewHolder.select_farmer_cardview.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
 
@@ -93,27 +116,28 @@ public class Adapter_select_farmer_2 extends RecyclerView.Adapter<Adapter_select
                     if ( adapter_select_farmer_2_viewHolder.select_farmer_checkbox.isChecked()) {
 
                         adapter_select_farmer_2_viewHolder.select_farmer_checkbox.setChecked(false);
-                        ids.remove(farmers.get(i).getId());
                     }
                     else
                         {
                             adapter_select_farmer_2_viewHolder.select_farmer_checkbox.setChecked(true);
-                            ids.add(farmers.get(i).getId());
-                            Toast.makeText(context, "Total ids are "+ids.size(), Toast.LENGTH_SHORT).show();
                         }
                 }
             });
 
-// storing what item is checked and changing the corresponding flag in selectFarmerActivity
+            // storing what item is checked and changing the corresponding flag in selectFarmerActivity
             adapter_select_farmer_2_viewHolder.select_farmer_checkbox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                     if (isChecked){
                         Log.d("Checked", String.valueOf(i));
+                        ids.add(farmers.get(i).getId());
+                        Toast.makeText(context, "No of farmers selected are" + ids.size(), Toast.LENGTH_SHORT).show();
                         selectFarmerActivity.flag[i] = true;
                     }
                     else {
                         selectFarmerActivity.flag[i]= false;
+                        ids.remove(farmers.get(i).getId());
+                        Toast.makeText(context, "No of farmers selected are" + ids.size(), Toast.LENGTH_SHORT).show();
                     }
                 }
             });

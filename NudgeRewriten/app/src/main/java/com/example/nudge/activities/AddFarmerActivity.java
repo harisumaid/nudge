@@ -19,6 +19,8 @@ import android.provider.MediaStore;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -35,12 +37,16 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.nudge.R;
+import com.example.nudge.fragments.FarmerListFragment;
 import com.example.nudge.models.FarmerModel;
+import com.example.nudge.utils.SharedPrefUtils;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreSettings;
 import com.google.firebase.firestore.GeoPoint;
@@ -63,7 +69,7 @@ public class AddFarmerActivity extends AppCompatActivity {
     Uri img_uri;
     ProgressBar geoPb,uploadPb;
     int flag=0;
-    SharedPreferences agentId;
+    SharedPrefUtils sharedPrefUtils;
 
     FirebaseFirestore db = FirebaseFirestore.getInstance();
     StorageReference mStorageRef;
@@ -175,24 +181,61 @@ public class AddFarmerActivity extends AppCompatActivity {
         backBtn2 = findViewById(R.id.back_btn2);
         uploadPb = findViewById(R.id.upload_pb);
 
-
         FirebaseFirestoreSettings settings = new FirebaseFirestoreSettings.Builder()
                 .setPersistenceEnabled(true)
                 .build();
         db.setFirestoreSettings(settings);
 
-        if(!isLocationEnabled(this)) Toast.makeText(this, "Turn On your location.", Toast.LENGTH_LONG).show();
+        final LocationManager manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+
+        if(!isLocationEnabled(this) || !manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+
+            final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                        .setCancelable(false)
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            public void onClick(final DialogInterface dialog, final int id) {
+                                dialog.cancel();
+                            }
+                        });
+                final AlertDialog alert = builder.create();
+                alert.show();
+        }
 
         mStorageRef = FirebaseStorage.getInstance().getReference();
 
         farmSize = findViewById(R.id.farm_size);
 
-        agentId=this.getSharedPreferences("com.example.nudge", Context.MODE_PRIVATE);
 
         geoPb = findViewById(R.id.geo_pb);
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         checkLocationPermission();
+
+        sharedPrefUtils = new SharedPrefUtils(this);
+
+        String id = getIntent().getStringExtra("FarmerId");
+        if(id!=null) {
+            db.collection("agents").document(sharedPrefUtils.readAgentId()).collection("farmers").document(id).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    FarmerModel farmer = documentSnapshot.toObject(FarmerModel.class);
+
+                    farmerName.setText(farmer.getName());
+                    farmerAdd.setText(farmer.getAddress());
+                    farmerNo1.setText(farmer.getPrimary_contact_number());
+                    farmerNo2.setText(farmer.getSecondary_contact_number());
+                    Glide.with(getApplicationContext()).load(farmer.getImage()).into(farmerImg);
+                    farmSize.setText(farmer.getFarm_size());
+                }
+            });
+        }
+
 
         toolbar = findViewById(R.id.toolbar_farmer_add);
 
@@ -241,7 +284,7 @@ public class AddFarmerActivity extends AppCompatActivity {
                             Toast.makeText(AddFarmerActivity.this, "Farmer is being added to your account. Pls Wait.", Toast.LENGTH_SHORT).show();
 
                             db.collection("agents")
-                                    .document(agentId.getString("agentId",""))
+                                    .document(sharedPrefUtils.readAgentId())
                                     .collection("farmers").add(farmer)
                                     .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                                         @Override
@@ -267,13 +310,16 @@ public class AddFarmerActivity extends AppCompatActivity {
                                                         public void onSuccess(Uri uri) {
 
                                                             db.collection("agents")
-                                                                    .document(agentId.getString("agentId",""))
+                                                                    .document(sharedPrefUtils.readAgentId())
                                                                     .collection("farmers")
                                                                     .document(id[0]).update(
                                                                     "id",id[0],
                                                                     "image",uri.toString()
                                                             );
-                                                            onBackPressed();
+
+                                                            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+                                                            intent.putExtra("ID","update");
+                                                            startActivity(intent);
                                                         }
                                                     });
                                                 }

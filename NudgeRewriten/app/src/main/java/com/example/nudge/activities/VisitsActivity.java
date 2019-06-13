@@ -1,15 +1,22 @@
 package com.example.nudge.activities;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.example.nudge.R;
@@ -35,7 +42,10 @@ public class VisitsActivity extends AppCompatActivity {
     List<VisitModel> todayVisits = new ArrayList<>();
     List<VisitModel> upcomingVisits = new ArrayList<>();
 
-    TextView pending_sample_text,today_sample_text,upcoming_sample_text;
+    ScrollView visitView;
+    ProgressBar visitProgressBar;
+
+    CardView pending_sample_text,today_sample_text,upcoming_sample_text;
 
     FirebaseFirestore db;
     SharedPrefUtils sharedPrefUtils;
@@ -52,9 +62,17 @@ public class VisitsActivity extends AppCompatActivity {
         pendingRcv = findViewById(R.id.pending_rcv);
         upcomingRcv = findViewById(R.id.upcoming_rcv);
 
-        pending_sample_text = findViewById(R.id.pending_sample_text);
-        today_sample_text = findViewById(R.id.today_sample_text);
-        upcoming_sample_text = findViewById(R.id.upcoming_sample_text);
+        pending_sample_text = findViewById(R.id.pending_default_card);
+        today_sample_text = findViewById(R.id.today_default_card);
+        upcoming_sample_text = findViewById(R.id.upcoming_default_card);
+
+        visitView = findViewById(R.id.visit_default);
+        visitView.setVisibility(View.INVISIBLE);
+        visitProgressBar = findViewById(R.id.progress_bar_visit);
+        visitProgressBar.setVisibility(View.VISIBLE);
+
+        final long shortAnimationDuration = getResources().getInteger(
+                android.R.integer.config_shortAnimTime);
 
         db = FirebaseFirestore.getInstance();
         sharedPrefUtils = new SharedPrefUtils(this);
@@ -80,14 +98,63 @@ public class VisitsActivity extends AppCompatActivity {
 
                     }
 
-                    if(upcomingVisits.isEmpty()) upcoming_sample_text.setVisibility(View.VISIBLE);
-                    if(pendingVisits.isEmpty()) pending_sample_text.setVisibility(View.VISIBLE);
-                    if(todayVisits.isEmpty()) today_sample_text.setVisibility(View.VISIBLE);
+                    if(upcomingVisits.isEmpty()) upcoming_sample_text.setVisibility(View.VISIBLE); else {
+                        ViewGroup parent = (ViewGroup) upcoming_sample_text.getParent();
+                        if (parent != null) {
+                            parent.removeView(upcoming_sample_text);
+                        }
+                    }
+                    if(pendingVisits.isEmpty()) pending_sample_text.setVisibility(View.VISIBLE); else {
+                        ViewGroup parent = (ViewGroup) pending_sample_text.getParent();
+                        if (parent != null) {
+                            parent.removeView(pending_sample_text);
+                        }
+                    }
+
+                    if(todayVisits.isEmpty()) today_sample_text.setVisibility(View.VISIBLE); else {
+                        ViewGroup parent = (ViewGroup) today_sample_text.getParent();
+                        if (parent != null) {
+                            parent.removeView(today_sample_text);
+                        }
+                    }
 
                     adapter1.notifyDataSetChanged();
                     adapter2.notifyDataSetChanged();
                     adapter3.notifyDataSetChanged();
                 }
+
+                visitView.animate()
+                        .alpha(1f)
+                        .setDuration(shortAnimationDuration)
+                        .setListener(null);
+
+                visitView.setVisibility(View.VISIBLE);
+
+                visitProgressBar.animate()
+                        .alpha(0f)
+                        .setDuration(shortAnimationDuration)
+                        .setListener(new Animator.AnimatorListener() {
+                            @Override
+                            public void onAnimationStart(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                                visitProgressBar.setVisibility(View.GONE);
+                            }
+
+                            @Override
+                            public void onAnimationCancel(Animator animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animator animation) {
+
+                            }
+                        });
+
             }
         });
 

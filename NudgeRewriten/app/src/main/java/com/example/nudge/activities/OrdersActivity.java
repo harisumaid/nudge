@@ -1,5 +1,6 @@
 package com.example.nudge.activities;
 
+import android.animation.Animator;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,6 +14,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.nudge.R;
@@ -42,6 +45,8 @@ public class OrdersActivity extends AppCompatActivity {
     ImageView backBtn;
     RecyclerView orderRcv;
     OrdersAdapter adapter;
+    ProgressBar orderProgressBar;
+    public TextView ifOrderEmpty;
     List<OrderModel> orderModels = new ArrayList<>();
     List<OrderModel> orderModelList; //Shared Predference list
     List<OrderModel> orderedList = new ArrayList<>();
@@ -64,12 +69,18 @@ public class OrdersActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance(); //instantiate firestore
         loadFirestore(); //load firestore
 
+        ifOrderEmpty = findViewById(R.id.if_order_empty);
+
         orderBtn = findViewById(R.id.order_btn);
+        orderProgressBar = findViewById(R.id.order_progress_bar);
         receivedBtn = findViewById(R.id.received_btn);
         deliveredBtn = findViewById(R.id.delivered_btn);
         backBtn = findViewById(R.id.back_btn1);
         orderRcv = findViewById(R.id.order_rcv);
         preferences = getSharedPreferences("MyPref",MODE_PRIVATE);
+
+        orderRcv.setVisibility(View.GONE);
+        orderProgressBar.setVisibility(View.VISIBLE);
 
         orderRcv.setLayoutManager(new LinearLayoutManager(this));
         orderRcv.setItemAnimator(new DefaultItemAnimator());
@@ -106,8 +117,13 @@ public class OrdersActivity extends AppCompatActivity {
                 orderBtn.requestFocus();
                 flag.clear();
                 flag.add(0);
-                //adapter=new OrdersAdapter(orderedList,receivedList,deliveredList,flag,context);
-                //orderRcv.setAdapter(adapter);
+                if (orderedList.size()==0) {
+                    ifOrderEmpty.setVisibility(View.VISIBLE);
+//                    ifOrderEmpty.setText("No Order Placed");
+                }
+                else
+                    ifOrderEmpty.setVisibility(View.GONE);
+
 
                 adapter.notifyDataSetChanged();
 //                loadSharedPref();
@@ -121,8 +137,14 @@ public class OrdersActivity extends AppCompatActivity {
                 flag.clear();
                 flag.add(1);
 
-                //adapter=new OrdersAdapter(orderedList,receivedList,deliveredList,flag,context);
-                //orderRcv.setAdapter(adapter);
+                if (receivedList.size()==0) {
+                    ifOrderEmpty.setVisibility(View.VISIBLE);
+                    ifOrderEmpty.setText("Nothing to show");
+                }
+                else
+                    ifOrderEmpty.setVisibility(View.GONE);
+
+
                 adapter.notifyDataSetChanged();
             }
         });
@@ -133,8 +155,14 @@ public class OrdersActivity extends AppCompatActivity {
                 deliveredBtn.requestFocus();
                 flag.clear();
                 flag.add(2);
-                //adapter=new OrdersAdapter(orderedList,receivedList,deliveredList,flag,context);
-                //orderRcv.setAdapter(adapter);
+
+                if (deliveredList.size()==0) {
+                    ifOrderEmpty.setText("Nothing to show");
+                    ifOrderEmpty.setVisibility(View.VISIBLE);
+                }
+                else
+                    ifOrderEmpty.setVisibility(View.GONE);
+
 
                 adapter.notifyDataSetChanged();
 
@@ -191,6 +219,42 @@ public class OrdersActivity extends AppCompatActivity {
                                     orderModels.add(model);
                                 }
                             }
+                            orderRcv.setVisibility(View.VISIBLE);
+
+                            orderProgressBar.animate()
+                                    .alpha(0f)
+                                    .setDuration(getResources().getInteger(
+                                            android.R.integer.config_shortAnimTime))
+                                    .setListener(new Animator.AnimatorListener() {
+                                        @Override
+                                        public void onAnimationStart(Animator animation) {
+
+                                        }
+
+                                        @Override
+                                        public void onAnimationEnd(Animator animation) {
+                                            orderProgressBar.setVisibility(View.GONE);
+                                            Log.d("size", "onComplete: "+orderedList.size());
+                                            if (orderedList.size()==0) {
+                                                ifOrderEmpty.setVisibility(View.VISIBLE);
+                                                ifOrderEmpty.setText("No Orders Present");
+                                            }
+                                            else
+                                                ifOrderEmpty.setVisibility(View.GONE);
+
+                                        }
+
+                                        @Override
+                                        public void onAnimationCancel(Animator animation) {
+
+                                        }
+
+                                        @Override
+                                        public void onAnimationRepeat(Animator animation) {
+
+                                        }
+                                    });
+
                             orderRcv.setAdapter(adapter);
                         }
                         else{
@@ -214,7 +278,7 @@ public class OrdersActivity extends AppCompatActivity {
         });
     }
 
-    public void fetchImage(OrderModel model){
+    public void fetchImage(final OrderModel model){
         db.collection("products")
                 .document(model.getOrderedProductId())
                 .get()
@@ -223,6 +287,7 @@ public class OrdersActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         imageMap.put(task.getResult().getId(), (String) task.getResult().get("product_image"));
                         Log.d("orderImage", "onComplete: "+imageMap);
+                        adapter.notifyDataSetChanged();
                     }
                 });
 

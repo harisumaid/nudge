@@ -125,7 +125,16 @@ public class LoginActivity extends AppCompatActivity {
                     int flag=0;
                     for(DocumentSnapshot d: list) {
 
-                        AgentModel agent = d.toObject(AgentModel.class);
+                        final AgentModel agent = d.toObject(AgentModel.class);
+
+                        db.collection("agents").document(agent.getId()).collection("farmers").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                            @Override
+                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                                db.collection("agents").document(agent.getId()).update(
+                                        "farmers_count",queryDocumentSnapshots.size()
+                                );
+                            }
+                        });
 
                         if(agent.getId().equals(id)) {
 
