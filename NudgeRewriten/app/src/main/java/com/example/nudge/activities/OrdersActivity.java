@@ -1,39 +1,23 @@
 package com.example.nudge.activities;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
-
 import com.example.nudge.R;
 import com.example.nudge.adapters.OrdersAdapter;
 import com.example.nudge.models.OrderModel;
-import com.example.nudge.utils.SharedPrefUtils;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class OrdersActivity extends AppCompatActivity {
 
@@ -42,27 +26,17 @@ public class OrdersActivity extends AppCompatActivity {
     ImageView backBtn;
     RecyclerView orderRcv;
     OrdersAdapter adapter;
-    List<OrderModel> orderModels = new ArrayList<>();
-    List<OrderModel> orderModelList; //Shared Predference list
-    List<OrderModel> orderedList = new ArrayList<>();
-    Map<String,String> imageMap = new HashMap<>();
-    List<OrderModel> receivedList = new ArrayList<>();
-    List<OrderModel> deliveredList = new ArrayList<>();
-    SharedPreferences preferences;
-    FirebaseFirestore db;
-    SharedPrefUtils sharedPrefUtils;
-    Context context;
+    List<String> farmers = new ArrayList<>();
+    List<String> orderTypes = new ArrayList<>();
+    List<String> dates = new ArrayList<>();
     List<Integer> flag = new ArrayList<>();
+    List<OrderModel> orderModelList;
+    SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_orders);
-        context = this;
-        sharedPrefUtils = new SharedPrefUtils(context);
-
-        db = FirebaseFirestore.getInstance(); //instantiate firestore
-        loadFirestore(); //load firestore
 
         orderBtn = findViewById(R.id.order_btn);
         receivedBtn = findViewById(R.id.received_btn);
@@ -71,12 +45,23 @@ public class OrdersActivity extends AppCompatActivity {
         orderRcv = findViewById(R.id.order_rcv);
         preferences = getSharedPreferences("MyPref",MODE_PRIVATE);
 
+        farmers.add("John Doe");
+        farmers.add("Pablo Escobar");
+        farmers.add("Skyler Grey");
+        farmers.add("Daft Punk");
+        farmers.add("Pablo Escobar");
+
+        for(int i=0;i<5;i++) {
+            orderTypes.add("Ordered By:");
+            dates.add("2"+i+"th June,2019");
+        }
+
+        flag.add(1);
+
         orderRcv.setLayoutManager(new LinearLayoutManager(this));
         orderRcv.setItemAnimator(new DefaultItemAnimator());
-        flag.add(0);
-
-        adapter=new OrdersAdapter(orderedList,receivedList,deliveredList,flag,context,imageMap);
-
+        adapter = new OrdersAdapter(farmers,orderTypes,dates,flag,this);
+        orderRcv.setAdapter(adapter);
 
 
         orderBtn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -104,13 +89,12 @@ public class OrdersActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 orderBtn.requestFocus();
+                orderTypes.clear();
+                for(int i=0;i<5;i++) orderTypes.add("Ordered By:");
                 flag.clear();
-                flag.add(0);
-                //adapter=new OrdersAdapter(orderedList,receivedList,deliveredList,flag,context);
-                //orderRcv.setAdapter(adapter);
-
+                flag.add(1);
                 adapter.notifyDataSetChanged();
-//                loadSharedPref();
+                loadSharedPref();
             }
         });
 
@@ -118,11 +102,10 @@ public class OrdersActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 receivedBtn.requestFocus();
+                orderTypes.clear();
+                for(int i=0;i<5;i++) orderTypes.add("Deliver to:");
                 flag.clear();
-                flag.add(1);
-
-                //adapter=new OrdersAdapter(orderedList,receivedList,deliveredList,flag,context);
-                //orderRcv.setAdapter(adapter);
+                flag.add(2);
                 adapter.notifyDataSetChanged();
             }
         });
@@ -131,11 +114,10 @@ public class OrdersActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 deliveredBtn.requestFocus();
+                orderTypes.clear();
+                for(int i=0;i<5;i++) orderTypes.add("Delivered to:");
                 flag.clear();
-                flag.add(2);
-                //adapter=new OrdersAdapter(orderedList,receivedList,deliveredList,flag,context);
-                //orderRcv.setAdapter(adapter);
-
+                flag.add(3);
                 adapter.notifyDataSetChanged();
 
             }
@@ -155,76 +137,9 @@ public class OrdersActivity extends AppCompatActivity {
         orderModelList= gson.fromJson(json,type);
         if(orderModelList == null)
         {
-            orderModelList.add(new OrderModel("Name","ProductName","OrderDate","FarmerId","OrderId","OrderReceivingDate","OrderDeliveryDate","OrderProductName"));
+            orderModelList= new ArrayList<>();
         }
-        Log.d("sharedpref", "loadSharedPref: "+orderModelList.get(0));
-   //     adapter.updateAdapter(orderModelList);
+        adapter.updateAdapter(orderModelList);
         adapter.notifyDataSetChanged();
-    }
-
-    public void loadFirestore(){
-        db.collection("agents")
-                .document(sharedPrefUtils.readAgentId())
-                .collection("orders")
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                        if (task.isSuccessful()){
-
-                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-
-                                if (documentSnapshot.exists()) {
-                                    OrderModel model = documentSnapshot.toObject(OrderModel.class);
-                                    Log.d("click", "onComplete: "+model.getOrderedReceivingDate());
-                                    if (model.getOrderedReceivingDate()==null) {
-                                        orderedList.add(model);
-                                    }
-                                    else if (model.getOrderedDeliveryDate()==null) {
-                                        receivedList.add(model);
-                                    }
-                                    else {
-                                        deliveredList.add(model);
-                                    }
-                                    fetchImage(model);
-
-                                    orderModels.add(model);
-                                }
-                            }
-                            orderRcv.setAdapter(adapter);
-                        }
-                        else{
-                            Log.d("firebase", "Error getting documents: ", task.getException());
-                        }
-
-                    }
-                });
-    }
-
-    public void uploadDeliveryDate(OrderModel query){
-        db.collection("agents")
-                .document(sharedPrefUtils.readAgentId())
-                .collection("orders")
-                .document(query.getOrderedId())
-                .set(query).addOnSuccessListener(new OnSuccessListener<Void>() {
-            @Override
-            public void onSuccess(Void aVoid) {
-                Snackbar.make(deliveredBtn,"Data pushed to backend storage", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-    public void fetchImage(OrderModel model){
-        db.collection("products")
-                .document(model.getOrderedProductId())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        imageMap.put(task.getResult().getId(), (String) task.getResult().get("product_image"));
-                        Log.d("orderImage", "onComplete: "+imageMap);
-                    }
-                });
-
     }
 }

@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.nudge.R;
 import com.example.nudge.activities.ViewStore;
 import com.example.nudge.models.products;
@@ -43,28 +42,16 @@ public class ProductViewAdapter extends RecyclerView.Adapter<ProductViewAdapter.
 
     @Override
     public void onBindViewHolder(@NonNull final ProductViewHolder viewHolder, final int i) {
-
-        if (Products.get(i).isAvailability()){
-            viewHolder.productAvailableIcon.setImageResource(R.drawable.ic_check_circle_checked_24dp);
-            viewHolder.productAvailableText.setText("Available");
-            viewHolder.viewstore_order_button.setEnabled(true);
-        }
-        else {
-            viewHolder.productAvailableText.setText("Not Available");
-            viewHolder.viewstore_order_button.setEnabled(false);
-            viewHolder.productAvailableIcon.setImageResource(R.drawable.ic_baseline_check_circle_24px);
-        }
-        Glide.with(context).load(Products.get(i).getProduct_image()).into(viewHolder.itemimage);
-
-        viewHolder.Price.setText( "\u20B9 "+(Products.get(i).getProduct_price()));
-        viewHolder.Productname.setText(Products.get(i).getProduct_name());
-        viewHolder.Productcompany.setText(Products.get(i).getProduct_company());
+        viewHolder.itemimage.setImageResource(Products.get(i).getProductimage());
+        viewHolder.Price.setText(Integer.toString(Products.get(i).getPrice()));
+        viewHolder.Productname.setText(Products.get(i).getProductname());
+        viewHolder.Productcompany.setText(Products.get(i).getProductComany());
         viewHolder.viewStoreChildView.setVisibility(View.GONE);
         viewHolder.viewstoreDropDownIcon.setImageResource(R.drawable.ic_expand_more_black_24dp);
         viewHolder.viewstore_order_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                viewStore.productId=Products.get(i).getProduct_id();
+                viewStore.productName=(String) viewHolder.Productname.getText();
                 viewStore.showPopUps(v);
             }
         });
@@ -93,8 +80,8 @@ public class ProductViewAdapter extends RecyclerView.Adapter<ProductViewAdapter.
     public static class ProductViewHolder extends RecyclerView.ViewHolder
     {
 
-        ImageView itemimage,viewstoreDropDownIcon,productAvailableIcon;
-        TextView Productname,Productcompany,Price,VisitDate,productAvailableText;
+        ImageView itemimage,viewstoreDropDownIcon;
+        TextView Productname,Productcompany,Price,VisitDate;
         ViewStore viewStore;
         CardView cardView;
         ConstraintLayout viewStoreChildView;
@@ -104,8 +91,6 @@ public class ProductViewAdapter extends RecyclerView.Adapter<ProductViewAdapter.
         public ProductViewHolder(@NonNull View itemView, ViewStore viewStore) {
             super(itemView);
             VisitDate=itemView.findViewById(R.id.visit_date);
-            productAvailableText = itemView.findViewById(R.id.product_available_text);
-            productAvailableIcon = itemView.findViewById(R.id.product_available_icon);
             viewstoreDropDownIcon = itemView.findViewById(R.id.viewstore_dropDownIcon);
             itemimage=(ImageView) itemView.findViewById(R.id.viewstore_product_image);
             Productname=(TextView) itemView.findViewById(R.id.viewstore_product_title);

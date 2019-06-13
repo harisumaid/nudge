@@ -40,7 +40,7 @@ public class ViewStore extends AppCompatActivity {
     List<products> Products = new ArrayList<>();
 
     //    variables about placing the orders
-    public String productId;
+    public String productName;
     String orderReceivingDate;
 
     private Toolbar toolbar;
@@ -89,8 +89,7 @@ public class ViewStore extends AppCompatActivity {
                         if (task.isSuccessful()){
                             for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
                                 if (documentSnapshot.exists()) {
-                                    products products = documentSnapshot.toObject(com.example.nudge.models.products.class);
-                                    Products.add(products);
+                                    Products.add(new products((String)documentSnapshot.get("product_name"),(String)documentSnapshot.get("product_company"),((Long)documentSnapshot.get("product_price")).intValue() ,R.drawable.fertilizer));
                                 }
                             }
                         }
@@ -141,34 +140,34 @@ public class ViewStore extends AppCompatActivity {
 
     public void showPopUps(View v) {
         Intent intent = new Intent(context, SelectFarmerActivity.class);
-        intent.putExtra("productId", productId);
-//        intent.putExtra("product_receiving_date",receivingDate(productId));
+        intent.putExtra("productName", productName);
+        intent.putExtra("product_receiving_date",receivingDate(productName));
         startActivity(intent);
 
     }
 
-//    public String receivingDate(String productId){
-//        final String[] orderReceivingDate = {""};
-//        //       fetching the receiving date value by the productId supplied from placeOrder() method.
-//
-//        db.collection("products").document(productId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//
-//                if (task.isSuccessful()) {
-//                    // Document found in the offline cache
-//                    DocumentSnapshot document = task.getResult();
-//                    orderReceivingDate[0] = (String) document.get("receiving_date");
-//                    Log.d("firebase", "onReceivingDate "+ orderReceivingDate[0]);
-//                } else {
-//                    Log.d("error", "Cached get failed: ", task.getException());
-//                }
-//
-//            }
-//        });
-//
-//        return orderReceivingDate[0];
-//    }
+    public String receivingDate(String productId){
+        final String[] orderReceivingDate = {""};
+        //       fetching the receiving date value by the productId supplied from placeOrder() method.
+
+        db.collection("products").document(productId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+
+                if (task.isSuccessful()) {
+                    // Document found in the offline cache
+                    DocumentSnapshot document = task.getResult();
+                    orderReceivingDate[0] = (String) document.get("receiving_date");
+                    Log.d("firebase", "onReceivingDate "+ orderReceivingDate[0]);
+                } else {
+                    Log.d("error", "Cached get failed: ", task.getException());
+                }
+
+            }
+        });
+
+        return orderReceivingDate[0];
+    }
 
 
 

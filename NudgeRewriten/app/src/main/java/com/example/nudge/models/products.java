@@ -4,33 +4,28 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class products implements Parcelable {
+    String Productname, ProductComany;
+    int price,productimage;
 
-    String number_available,product_company,product_id,product_image,product_name;
-    boolean availability;
-    int product_price;
-
-    public products(String number_available,String product_company,String product_id,String product_image,String product_name,boolean availability, int product_price){
-        this.availability=availability;
-        this.number_available = number_available;
-        this.product_company = product_company;
-        this.product_id = product_id;
-        this.product_image = product_image;
-        this.product_name = product_name;
-        this.product_price = product_price;
+    public int getProductimage() {
+        return productimage;
     }
 
-    public products(){
+    public void setProductimage(int productimage) {
+        this.productimage = productimage;
+    }
 
+    public products(String productname, String productComany, int price, int productimage) {
+        this.Productname = productname;
+        this.ProductComany = productComany;
+        this.price = price;
+        this.productimage = productimage;
     }
 
     protected products(Parcel in) {
-        number_available = in.readString();
-        product_company = in.readString();
-        product_id = in.readString();
-        product_image = in.readString();
-        product_name = in.readString();
-        availability = in.readByte() != 0;
-        product_price = in.readInt();
+        Productname = in.readString();
+        ProductComany = in.readString();
+        price = in.readInt();
     }
 
     public static final Creator<products> CREATOR = new Creator<products>() {
@@ -45,62 +40,29 @@ public class products implements Parcelable {
         }
     };
 
-    public String getNumber_available() {
-        return number_available;
+    public String getProductname() {
+        return Productname;
     }
 
-    public void setNumber_available(String number_available) {
-        this.number_available = number_available;
+    public void setProductname(String productname) {
+        Productname = productname;
     }
 
-    public String getProduct_company() {
-        return product_company;
+    public String getProductComany() {
+        return ProductComany;
     }
 
-    public void setProduct_company(String product_company) {
-        this.product_company = product_company;
+    public void setProductComany(String productComany) {
+        ProductComany = productComany;
     }
 
-    public String getProduct_id() {
-        return product_id;
+    public int getPrice() {
+        return price;
     }
 
-    public void setProduct_id(String product_id) {
-        this.product_id = product_id;
+    public void setPrice(int price) {
+        this.price = price;
     }
-
-    public String getProduct_image() {
-        return product_image;
-    }
-
-    public void setProduct_image(String product_image) {
-        this.product_image = product_image;
-    }
-
-    public String getProduct_name() {
-        return product_name;
-    }
-
-    public void setProduct_name(String product_name) {
-        this.product_name = product_name;
-    }
-
-    public boolean isAvailability() {
-        return availability;
-    }
-
-    public void setAvailability(boolean availability) {
-        this.availability = availability;
-    }
-
-    public int getProduct_price() {
-        return product_price;
-    }
-
-    public void setProduct_price(int product_price) {
-        this.product_price = product_price;
-    }
-
 
     @Override
     public int describeContents() {
@@ -109,12 +71,9 @@ public class products implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(number_available);
-        dest.writeString(product_company);
-        dest.writeString(product_id);
-        dest.writeString(product_image);
-        dest.writeString(product_name);
-        dest.writeByte((byte) (availability ? 1 : 0));
-        dest.writeInt(product_price);
+        dest.writeString(Productname);
+        dest.writeString(ProductComany);
+        dest.writeInt(price);
     }
+
 }

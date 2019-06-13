@@ -25,8 +25,6 @@ import com.example.nudge.models.OrderModel;
 import com.example.nudge.utils.SharedPrefUtils;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -34,7 +32,6 @@ import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
@@ -45,15 +42,12 @@ public class SelectFarmerActivity extends AppCompatActivity {
 
     public List<OrderModel> orderPlaced = new ArrayList<>();
     List<FarmerModel> farmers = new ArrayList<>();
-    public String productId;
-    String orderedDate;
+    public String productName;
+    String productReceivingDate;
     SharedPreferences preferences;
     SharedPreferences.Editor editor;
     SharedPrefUtils sharedPrefUtils;
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
     Adapter_select_farmer_1 adapter;
-    OrderModel orderModel;
-    Calendar c ;
 
     String id;
     Context context;
@@ -62,6 +56,7 @@ public class SelectFarmerActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_farmer);
         context = this;
+        final FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         sharedPrefUtils = new SharedPrefUtils(context);
 
@@ -207,7 +202,6 @@ public class SelectFarmerActivity extends AppCompatActivity {
 
                 returnIntent.putStringArrayListExtra("result", (ArrayList<String>) names);
                 setResult(Activity.RESULT_OK,returnIntent);
-                placeOrder(names);
                 finish();
 
 
@@ -237,78 +231,13 @@ public class SelectFarmerActivity extends AppCompatActivity {
     }
 
     public void placeOrder(List<String> sendOrder){
-
-        productId = getIntent().getExtras().getString("productId");
-        c=Calendar.getInstance();
-        orderedDate = String.valueOf(c.getTime());
-        for (final String individualFarmerId:sendOrder) {
-
-
-            Log.d("firebase1", "placeOrder: " + individualFarmerId);
+        for (String individualFarmer:sendOrder) {
     //            HAVE TO ADD orderPlaced LIST TO SHARED PREFERENCE FOR REFLECTING IN ORDERS ACTIVITY
-            db.collection("agents")
-                    .document(sharedPrefUtils.readAgentId())
-                    .collection("farmers")
-                    .document(individualFarmerId)
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                @Override
-                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                    if (task.isSuccessful()){
-                        Log.d("firebase1", "onComplete: name : "+task.getResult().get("name"));
-
-                        orderModel = new OrderModel((String)task.getResult().get("name"),productId,orderedDate,individualFarmerId,"",null,null,null);
-                        setOrderAndName(orderModel);
-                    }
-                }
-            });
-
-            orderPlaced.add(orderModel);
+            orderPlaced.add(new OrderModel(individualFarmer,productName,productReceivingDate));
         }
-
         savedSharedpref(orderPlaced);
 
     }
-
-    public void setOrderAndName(final OrderModel orderModel){
-        String key,name;
-     final DocumentReference documentReference =   db.collection("agents")
-                .document(sharedPrefUtils.readAgentId())
-                .collection("orders")
-                .document();
-        key = documentReference.getId();
-
-        Log.d("firebase", "setOrder: key"+key);
-        orderModel.setOrderedId(key);
-
-
-        db.collection("products")
-                .document(orderModel.getOrderedProductId())
-                .get()
-                .addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                        orderModel.setOrderedProductName((String) task.getResult().get("product_name"));
-                        sendOrders(orderModel,documentReference);
-                    }
-                });
-    }
-
-    public void sendOrders(OrderModel orderModel, DocumentReference documentReference){
-        documentReference.set(orderModel)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()){
-                            Toast.makeText(SelectFarmerActivity.this, "order placed", Toast.LENGTH_SHORT).show();
-                        }
-                        else
-                            Toast.makeText(SelectFarmerActivity.this, "Oops!! there seems to be some error.", Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-    }
-
     public  void savedSharedpref(List<OrderModel> orderPlaced)
     {
         ((OrderPlaced) this.getApplication()).addOrderPlaced(orderPlaced);

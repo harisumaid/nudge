@@ -7,8 +7,6 @@
     <string name="title_activity_visits">VisitsActivity</string>
     <string name="farmer_hint">Search for farmers&#8230;</string>
     <string name="crop_market_hint">Search for crops&#8230;</string>
-    <string name="date_of_order"><b>Date of Order:</b></string>
-    <string name="Rs">\u20B9</string>
     <string name="cropdescription">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aspernatur cum magnam nulla quae quia quod, reprehenderit voluptatibus! Deleniti eos laboriosam maiores quia. Aliquam at eos praesentium, quae quisquam quo repudiandae! </string>
 
     <string-array name="crops_list">

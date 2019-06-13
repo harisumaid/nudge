@@ -22,19 +22,17 @@
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-          >
+            android:layout_height="match_parent">
 
             <ImageView
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/viewstore_product_image"
-                android:layout_width="70dp"
-                android:layout_height="70dp"
-                android:cropToPadding="true"
-                android:baselineAlignBottom="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:src="@drawable/fertilizer"
-                android:paddingBottom="8dp"
                 app:layout_constraintBottom_toTopOf="@+id/visit_child_view"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -79,7 +77,7 @@
             <android.support.constraint.ConstraintLayout
                 android:id="@+id/viewstore_child_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginTop="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -97,60 +95,78 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="@+id/visit_child_view" />
 
+                <ImageView
+                    android:id="@+id/date_svg"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="16dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_baseline_today_24px" />
 
                 <ImageView
                     android:id="@+id/imageView4"
                     android:layout_width="27dp"
                     android:layout_height="24dp"
-                    android:layout_marginStart="36dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="8dp"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginTop="10dp"
+                    android:layout_marginBottom="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/date_svg"
                     app:layout_constraintHorizontal_bias="0.0"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/date_svg"
+                    app:layout_constraintTop_toBottomOf="@+id/date_svg"
                     app:srcCompat="@drawable/ic_payment_black_24dp" />
 
                 <ImageView
-                    android:id="@+id/product_available_icon"
-                    android:layout_width="27dp"
-                    android:layout_height="27dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="8dp"
+                    android:id="@+id/check_svg"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
                     android:layout_marginBottom="8dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/imageView4"
                     app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toStartOf="@+id/imageView4"
-                    app:layout_constraintTop_toBottomOf="@id/imageView4"
-                    app:layout_constraintVertical_bias="0.0"
+                    app:layout_constraintTop_toBottomOf="@+id/imageView4"
+                    app:layout_constraintVertical_bias="1.0"
                     app:srcCompat="@drawable/ic_baseline_check_circle_24px" />
 
                 <TextView
-                    android:id="@+id/product_available_text"
+                    android:id="@+id/visit_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
-                    android:text="Available"
-                    app:layout_constraintHorizontal_bias="0"
-                    app:layout_constraintBottom_toBottomOf="@id/product_available_icon"
-                    app:layout_constraintEnd_toEndOf="@+id/viewstore_product_price"
-                    app:layout_constraintStart_toStartOf="@+id/viewstore_product_price"
-                    app:layout_constraintTop_toBottomOf="@+id/viewstore_product_price"
-                    app:layout_constraintVertical_bias="0.384" />
+                    android:text="29th April,2019"
+                    app:layout_constraintBottom_toBottomOf="@+id/date_svg"
+                    app:layout_constraintStart_toEndOf="@+id/date_svg"
+                    app:layout_constraintTop_toTopOf="@+id/date_svg"
+                    app:layout_constraintVertical_bias="1.0" />
 
+                <TextView
+                    android:id="@+id/order_btn"
+                    android:visibility="gone"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:text="Click here if done"
+                    app:layout_constraintBottom_toBottomOf="@+id/check_svg"
+                    app:layout_constraintStart_toEndOf="@+id/check_svg"
+                    app:layout_constraintTop_toTopOf="@+id/check_svg"
+                    app:layout_constraintVertical_bias="1.0" />
 
                 <TextView
                     android:id="@+id/viewstore_product_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="100dp"
-                    android:layout_marginTop="4dp"
+                    android:layout_marginStart="16dp"
                     android:text="product price"
-                    app:layout_constraintBottom_toBottomOf="@id/imageView4"
-                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+                    app:layout_constraintStart_toEndOf="@+id/imageView4"
                     app:layout_constraintTop_toTopOf="@+id/imageView4"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintVertical_bias="1.0" />
 
                 <android.support.design.button.MaterialButton
                     android:id="@+id/viewstore_order_button"
