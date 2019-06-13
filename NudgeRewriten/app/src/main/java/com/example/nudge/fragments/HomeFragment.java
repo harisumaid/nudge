@@ -80,7 +80,9 @@ public class HomeFragment extends Fragment {
         viewAll.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getActivity(), ViewStore.class));
+                Intent intent = new Intent(getActivity(), ViewStore.class);
+                intent.putExtra("fromActivity","HomeFragment");
+                startActivity(intent);
             }
         });
 

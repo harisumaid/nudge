@@ -1,5 +1,6 @@
 package com.example.nudge.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -46,6 +47,8 @@ public class FarmerProfileActivity extends AppCompatActivity {
     RecyclerView scheduledCropRcv;
     ScheduledCropsAdapter adapter;
     ProgressBar farmerPb;
+    Context context;
+    FarmerModel farmerInfo;
 
     List<CropModel> crops = new ArrayList<>();
     SharedPrefUtils sharedPrefUtils;
@@ -64,6 +67,10 @@ public class FarmerProfileActivity extends AppCompatActivity {
             w.setFlags(WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS, WindowManager.LayoutParams.FLAG_LAYOUT_NO_LIMITS);
         }
 
+        context = this;
+
+        farmerInfo = getIntent().getParcelableExtra("FarmerInfo");
+
         collapsingToolbarLayout2 = findViewById(R.id.collapsing_toolbar2);
 
         collapsingToolbarLayout2.setCollapsedTitleTypeface(TyperRoboto.ROBOTO_REGULAR());
@@ -78,13 +85,15 @@ public class FarmerProfileActivity extends AppCompatActivity {
         storeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(getApplicationContext(),ViewStore.class));
+                Intent intent = new Intent(context,ViewStore.class);
+                intent.putExtra("farmerId", farmerInfo.getId());
+                intent.putExtra("farmerName",farmerInfo.getName());
+                intent.putExtra("fromActivity","FarmerProfileActivity");//to know from where ViewStore activity was called
+                startActivity(intent);
             }
         });
 
         sharedPrefUtils = new SharedPrefUtils(this);
-
-        final FarmerModel farmerInfo = getIntent().getParcelableExtra("FarmerInfo");
 
         if(farmerInfo!=null) {
 
