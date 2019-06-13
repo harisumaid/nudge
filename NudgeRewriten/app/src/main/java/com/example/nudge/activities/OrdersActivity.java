@@ -223,6 +223,7 @@ public class OrdersActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DocumentSnapshot> task) {
                         imageMap.put(task.getResult().getId(), (String) task.getResult().get("product_image"));
                         Log.d("orderImage", "onComplete: "+imageMap);
+                        adapter.notifyDataSetChanged();
                     }
                 });
 

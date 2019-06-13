@@ -1,6 +1,7 @@
 package com.example.nudge.activities;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -103,19 +104,31 @@ public class NewVisitActivity extends AppCompatActivity {
                     Toast.makeText(NewVisitActivity.this, "Select a time.", Toast.LENGTH_SHORT).show();
                 } else {
 
-                    CollectionReference visitRef = db.collection("agents").document(sharedPrefUtils.readAgentId()).collection("visits");
+                    final CollectionReference visitRef = db.collection("agents").document(sharedPrefUtils.readAgentId()).collection("visits");
+
+                    int index = 0;
 
                     for(String id: ids) {
                         VisitModel visit = new VisitModel(id,title,time,"",false,visit_date);
+                        final int finalIndex = index;
                         visitRef.add(visit).addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                             @Override
                             public void onSuccess(DocumentReference documentReference) {
                                 Toast.makeText(NewVisitActivity.this, "Adding visits. Pls Wait.", Toast.LENGTH_SHORT).show();
+                                visitRef.document(documentReference.getId()).update("id",documentReference.getId()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        if(finalIndex == ids.size()-1){
+                                            Toast.makeText(NewVisitActivity.this, "Visits Details added.", Toast.LENGTH_SHORT).show();
+                                            startActivity(new Intent(getApplicationContext(),VisitsActivity.class));
+                                        }
+                                    }
+                                });
+
                             }
                         });
+                        index++;
                     }
-                    Toast.makeText(NewVisitActivity.this, "Visits Details added.", Toast.LENGTH_SHORT).show();
-                    onBackPressed();
                 }
             }
         });
@@ -140,7 +153,6 @@ public class NewVisitActivity extends AppCompatActivity {
                 onBackPressed();
             }
         });
-
     }
 
     @Override
@@ -150,6 +162,9 @@ public class NewVisitActivity extends AppCompatActivity {
             // Make sure the request was successful
             if (resultCode == RESULT_OK) {
                 ids=data.getStringArrayListExtra("result");
+                if(ids.size()>0)
+                 contactSearchBtn.setText("Farmers selected.");
+                contactSearchBtn.setTextColor(Color.parseColor("#000000"));
             }
         }
     }

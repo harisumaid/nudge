@@ -43,6 +43,7 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar">
 
         <android.support.v4.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
@@ -110,7 +111,7 @@
                         <android.support.v7.widget.RecyclerView
                             android:id="@+id/prod_rcv_id"
                             android:layout_width="match_parent"
-                            android:layout_height="0dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toStartOf="parent"
@@ -234,6 +235,22 @@
             </android.support.constraint.ConstraintLayout>
         </android.support.v4.widget.NestedScrollView>
 
-    </android.support.constraint.ConstraintLayout>
 
+        <ProgressBar
+            android:id="@+id/progressBar_home"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="@+id/nestedScrollView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.509"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.218" />
+
+
+    </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

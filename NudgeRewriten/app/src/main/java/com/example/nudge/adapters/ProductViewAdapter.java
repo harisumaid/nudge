@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -98,7 +99,7 @@ public class ProductViewAdapter extends RecyclerView.Adapter<ProductViewAdapter.
         ViewStore viewStore;
         CardView cardView;
         ConstraintLayout viewStoreChildView;
-        MaterialButton viewstore_order_button;
+        Button viewstore_order_button;
 
 
         public ProductViewHolder(@NonNull View itemView, ViewStore viewStore) {
@@ -116,6 +117,9 @@ public class ProductViewAdapter extends RecyclerView.Adapter<ProductViewAdapter.
             viewStoreChildView=itemView.findViewById(R.id.viewstore_child_view);
             viewstore_order_button=itemView.findViewById(R.id.viewstore_order_button);
         }
+    }
 
+    public void click(int pos) {
+        currentPosition = pos;
     }
 }

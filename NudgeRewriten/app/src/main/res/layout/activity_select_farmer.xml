@@ -29,7 +29,6 @@
 
             <android.support.v7.widget.SearchView
                 android:id="@+id/select_farmer_searchview"
-                android:defaultFocusHighlightEnabled="false"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 app:iconifiedByDefault="false"
@@ -59,7 +58,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
-        android:background="@color/GrayBackground"
+        android:background="@drawable/cancel_btn_style"
         android:paddingStart="14dp"
         android:paddingEnd="14dp"
         android:text="CANCEL"

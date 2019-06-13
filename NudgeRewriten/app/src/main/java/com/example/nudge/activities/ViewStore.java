@@ -76,10 +76,12 @@ public class ViewStore extends AppCompatActivity {
 
 // making the viewstore_base_layout invisible while its loading and fading it in when the fetching of data is complete
         viewstore_base_layout.setVisibility(View.VISIBLE);
+
         final long shortAnimationDuration = getResources().getInteger(
                 android.R.integer.config_shortAnimTime);
 
         db = FirebaseFirestore.getInstance();
+        adapter = new ProductViewAdapter(Products,context);
         db.collection("products")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -97,7 +99,6 @@ public class ViewStore extends AppCompatActivity {
                         else{
                             Log.d("firebase", "Error getting documents: ", task.getException());
                         }
-                        adapter = new ProductViewAdapter(Products,context);
                         prodRcvId.setAdapter(adapter);
                         Toast.makeText(ViewStore.this, "fetched", Toast.LENGTH_SHORT).show();
                         viewstore_base_layout.animate()
@@ -137,6 +138,11 @@ public class ViewStore extends AppCompatActivity {
         layoutManager = new LinearLayoutManager(this);
         prodRcvId.setHasFixedSize(true);
         prodRcvId.setLayoutManager(layoutManager);
+
+        Integer position = getIntent().getIntExtra("POSITION",0);
+
+        prodRcvId.scrollToPosition(position);
+        adapter.click(position);
     }
 
     public void showPopUps(View v) {
