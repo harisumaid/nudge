@@ -21,18 +21,20 @@
         android:theme="@style/AppTheme"
         tools:replace="android:label"
         android:name=".activities.OrderPlaced">
-        <activity android:name=".activities.SelectFarmerActivity"></activity>
-        <activity android:name=".activities.ViewStore" />
-        <activity android:name=".activities.AddFarmerActivity" />
-        <activity android:name=".activities.CropTimeline" />
-        <activity android:name=".activities.ScheduleCropActivity" />
+        <activity android:name=".activities.SelectFarmerActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".activities.ViewStore" android:screenOrientation="portrait" />
+        <activity android:name=".activities.AddFarmerActivity" android:screenOrientation="portrait" />
+        <activity android:name=".activities.CropTimeline" android:screenOrientation="portrait"/>
+        <activity android:name=".activities.ScheduleCropActivity" android:screenOrientation="portrait" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activities.FarmerProfileActivity"
             android:theme="@style/FarmerStyle" />
-        <activity android:name=".activities.NewVisitActivity" />
-        <activity android:name=".activities.OrdersActivity" />
-        <activity android:name=".activities.VisitsActivity" />
+        <activity android:name=".activities.NewVisitActivity" android:screenOrientation="portrait" />
+        <activity android:name=".activities.OrdersActivity" android:screenOrientation="portrait" />
+        <activity android:name=".activities.VisitsActivity" android:screenOrientation="portrait" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activities.SplashScreenActivity"
             android:theme="@style/AppTheme1">
             <intent-filter>
@@ -43,9 +45,11 @@
             </intent-filter>
         </activity>
         <activity
+            android:screenOrientation="portrait"
             android:name=".activities.LoginActivity"
             android:theme="@style/AppTheme" />
         <activity
+            android:screenOrientation="portrait"
             android:name=".activities.MainActivity"
             android:windowSoftInputMode="adjustPan" />
         <activity android:name=".activities.SelectedCropActity" />

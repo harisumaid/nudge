@@ -54,34 +54,36 @@ public class SelectFarmerActivity extends AppCompatActivity {
     Adapter_select_farmer_1 adapter;
     OrderModel orderModel;
     Calendar c ;
-
     String id;
     Context context;
+
+    int fl = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         context = this;
 
         sharedPrefUtils = new SharedPrefUtils(context);
-        if (getIntent().getExtras().getString("fromActivity").equals("FarmerProfileActivity")) {
+
+        if (getIntent().getExtras().getString("fromActivity")!=null && getIntent().getExtras().getString("fromActivity").equals("FarmerProfileActivity")) {
             setContentView(R.layout.shadownig_selectfarmer_view);
+            List<String> select_farmer = new ArrayList<>();
             select_farmer.clear();//just using this for sending farmerId in a list as it was the only available list of string not bothered why its named that
             select_farmer.add(getIntent().getExtras().getString("farmerId"));
             placeOrder(select_farmer);
-
         } else {
             setContentView(R.layout.activity_select_farmer);
 
-
             //  place order button
-            Button select_farmer_order_button;
+            final Button select_farmer_order_button;
             select_farmer_order_button = findViewById(R.id.select_farmer_order_button);
 
             select_farmer = new ArrayList<>();//supplying the name of farmer after fetching
 
             final RecyclerView dialogRecycler = findViewById(R.id.dialog_recycler);//Main recycler view
 
-            Button select_farmer_cancel_button = findViewById(R.id.select_farmer_cancel_button);//Cancel Button
+            final Button select_farmer_cancel_button = findViewById(R.id.select_farmer_cancel_button);//Cancel Button
             select_farmer_cancel_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -90,23 +92,24 @@ public class SelectFarmerActivity extends AppCompatActivity {
             });
 
 
-            //        Fetching farmers list from database
+            if(getIntent().getStringExtra("PARENT")!=null && (getIntent().getStringExtra("PARENT").compareTo("Visit")==0))
+             {
+                 fl=1;
+             }
+
             db.collection("agents").document(sharedPrefUtils.readAgentId()).collection("farmers")
-                    .get()
-                    .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                        @Override
-                        public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                            if (task.isSuccessful()) {
-                                for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
-                                    if (documentSnapshot.exists()) {
-                                        // here fetching of data from collection of farmer is done where name and image of each farmer is fetched
-                                        Log.d("firebase", "onComplete: " + select_farmer);
-                                        farmers.add(documentSnapshot.toObject(FarmerModel.class));
-                                        select_farmer.add((String) documentSnapshot.get("name"));
-                                    }
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()) {
+                                if (documentSnapshot.exists()) {
+                                    // here fetching of data from collection of farmer is done where name and image of each farmer is fetched
+                                    Log.d("firebase", "onComplete: " + select_farmer);
+                                    farmers.add(documentSnapshot.toObject(FarmerModel.class));
+                                    select_farmer.add((String) documentSnapshot.get("name"));
                                 }
-                            } else {
-                                Log.d("firebase", "Error getting documents: ", task.getException());
                             }
 
                             Collections.sort(select_farmer);
@@ -130,7 +133,7 @@ public class SelectFarmerActivity extends AppCompatActivity {
                             dialogRecycler.setAdapter(adapter);
                             flag = new boolean[farmers.size()];
                         }
-
+                    }
                     });
 
             SearchView select_farmer_searchview = findViewById(R.id.select_farmer_searchview);
@@ -207,46 +210,26 @@ public class SelectFarmerActivity extends AppCompatActivity {
 
             //    placing the order by passing values to the OrderActivity
             // Storing the contacts that we need to send if that item was selected
-            select_farmer_order_button.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                    List<String> ids = adapter.getNames();
+           select_farmer_order_button.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View v) {
 
-                    Intent returnIntent = new Intent();
+                   List<String> ids = adapter.getNames();
+                   if(fl==0)
+                   {
+                       placeOrder(ids);
+                       finish();
+                   } else {
 
-                    returnIntent.putStringArrayListExtra("result", (ArrayList<String>) ids);
-                    setResult(Activity.RESULT_OK, returnIntent);
-
-                    placeOrder(ids);
-                    finish();
-
-
-//                List<String> sendOrder=new ArrayList<>();
-//
-//                for (int i=0;i<farmers.size();i++) {
-//                    if (flag[i]){
-//                        sendOrder.add(farmers.get(i).getName());
-//                        Log.d("order", "onClick: "+sendOrder);
-//                    }
-//                }
-//
-//                Log.d("Selected Farmers are :",sendOrder.toString());
-//
-//                Toast.makeText(context, "Order Placed", Toast.LENGTH_SHORT).show();
-                    //                ViewStore viewStore;
-                    //                viewStore = (ViewStore) getParent();
-                    //                viewStore.selected_farmer=sendOrder;
-                    //                viewStore.placeOrder();
-
-//                productName = getIntent().getExtras().getString("productName");
-//                productReceivingDate = getIntent().getExtras().getString("product_receiving_date");
-//                placeOrder(sendOrder);
-//                finish();
-                }
-            });
-        }
-    }
+                       Intent returnIntent = new Intent();
+                       returnIntent.putStringArrayListExtra("result", (ArrayList<String>) ids);
+                       setResult(Activity.RESULT_OK,returnIntent);
+                       finish();
+                   }
+               }
+           }); }
+                            }
 
     public void placeOrder(List<String> sendOrder){
 
@@ -338,6 +321,4 @@ public class SelectFarmerActivity extends AppCompatActivity {
         Log.i("TAG", "placeOrder: SharedPrefs Saved ");
         editor.commit();
     }
-
-
 }

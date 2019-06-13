@@ -267,10 +267,6 @@ public class AddFarmerActivity extends AppCompatActivity {
                         String size = farmSize.getText().toString();
                         final String[] id = new String[1];
 
-                        if(latitude==0 || longitude ==0) {
-                            Toast.makeText(AddFarmerActivity.this, "Geo-tagging image. Wait for sometime", Toast.LENGTH_SHORT).show();
-                            Toast.makeText(AddFarmerActivity.this, "Please click the check button after sometime.", Toast.LENGTH_SHORT).show();
-                        } else {
                             uploadPb.setVisibility(View.VISIBLE);
                             FarmerModel farmer = new FarmerModel(name,primary_contact_number,secondary_contact_number,"",address,size,"",new GeoPoint(latitude,longitude));
 
@@ -323,8 +319,6 @@ public class AddFarmerActivity extends AppCompatActivity {
                                             });
                                         }
                                     });
-
-                        }
                     };
                     return true;
                 } else return false;

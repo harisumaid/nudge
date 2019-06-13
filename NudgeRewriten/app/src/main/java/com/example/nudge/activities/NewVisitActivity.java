@@ -139,11 +139,8 @@ public class NewVisitActivity extends AppCompatActivity {
                 contactSearchBtn.performHapticFeedback(HapticFeedbackConstants.VIRTUAL_KEY);
 
                 Intent pickFarmerIntent = new Intent(getApplicationContext(),SelectFarmerActivity.class);
+                pickFarmerIntent.putExtra("PARENT","Visit");
                 startActivityForResult(pickFarmerIntent, PICK_FARMER_REQUEST);
-
-//                Intent intent = new Intent(getApplicationContext(),SelectFarmerActivity.class);
-//                intent.putExtra("PARENT","Visit");
-//                startActivity(intent);
             }
         });
 
@@ -157,6 +154,7 @@ public class NewVisitActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         // Check which request we're responding to
         if (requestCode == PICK_FARMER_REQUEST) {
             // Make sure the request was successful

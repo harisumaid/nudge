@@ -147,7 +147,7 @@ public class ViewStore extends AppCompatActivity {
     public void showPopUps(View v) {
         Intent intent = new Intent(context, SelectFarmerActivity.class);
 
-        if (getIntent().getExtras().getString("fromActivity").equals("FarmerProfileActivity")){
+        if (getIntent().getExtras().getString("fromActivity")!=null && getIntent().getExtras().getString("fromActivity").equals("FarmerProfileActivity")){
             intent.putExtra("farmerId", getIntent().getExtras().getString("farmerId"));
             intent.putExtra("farmerName",getIntent().getExtras().getString("farmerId"));
             intent.putExtra("fromActivity","FarmerProfileActivity");//to know from where ViewStore activity was called

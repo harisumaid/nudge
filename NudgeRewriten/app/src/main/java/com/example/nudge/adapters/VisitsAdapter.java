@@ -68,11 +68,15 @@ public class VisitsAdapter extends RecyclerView.Adapter<VisitsAdapter.myViewHold
         db.collection("agents").document(sharedPrefUtils.readAgentId()).collection("farmers").document(visits.get(i).getFarmer_id()).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
-                FarmerModel farmer = documentSnapshot.toObject(FarmerModel.class);
-                myViewHolder.farmerName.setText(farmer.getName());
-                phone_num = farmer.getPrimary_contact_number();
-                id = farmer.getId();
-                Glide.with(context).load(farmer.getImage()).into(myViewHolder.farmerImage);
+
+                if(documentSnapshot!=null) {
+                    FarmerModel farmer = documentSnapshot.toObject(FarmerModel.class);
+
+                    myViewHolder.farmerName.setText(farmer.getName());
+                    phone_num = farmer.getPrimary_contact_number();
+                    id = farmer.getId();
+                    Glide.with(context).load(farmer.getImage()).into(myViewHolder.farmerImage);
+                }
             }
         });
 
@@ -114,8 +118,6 @@ public class VisitsAdapter extends RecyclerView.Adapter<VisitsAdapter.myViewHold
         myViewHolder.changeStatusBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Toast.makeText(context, "It is here.", Toast.LENGTH_SHORT).show();
 
                 db.collection("agents").document(sharedPrefUtils.readAgentId()).collection("visits").document(visits.get(i).getId()).update(
                   "visit_status",true

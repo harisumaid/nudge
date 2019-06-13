@@ -17,14 +17,6 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/back_btn1"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="16dp"
-            android:background="@null"
-            app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
-
     </android.support.v7.widget.Toolbar>
 
     <android.support.v7.widget.AppCompatImageView
@@ -37,6 +29,18 @@ xmlns:app="http://schemas.android.com/apk/res-auto">
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@null" />
+
+
+    <ImageView
+        android:id="@+id/back_btn1"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_margin="16dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_arrow_back_black_24dp" />
 
 
     <ListView
