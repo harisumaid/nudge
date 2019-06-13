@@ -68,7 +68,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.myViewHold
 
 
         if (flag.get(0)==0) {           //for ordered tab
-            myViewHolder.type.setText("Order for :");
+            myViewHolder.type.setText("Ordered for :");
             myViewHolder.checksvg.setVisibility(View.GONE);
             myViewHolder.orderBtn.setVisibility(View.GONE);
             myViewHolder.orderDate.setText((modelList.get(i).getOrderedDate()));
