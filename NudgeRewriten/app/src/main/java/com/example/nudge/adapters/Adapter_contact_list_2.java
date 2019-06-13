@@ -22,12 +22,12 @@ import java.util.List;
 
 public class Adapter_contact_list_2 extends RecyclerView.Adapter<Adapter_contact_list_2.Adapter_contact_list_2_ViewHolder> {
 
-    String[] contactList;
+    List<String> contactList;
     List<FarmerModel> farmers;
     Context context;
 
 
-    public Adapter_contact_list_2(String[] contactList, List<FarmerModel> farmers, Context context) {
+    public Adapter_contact_list_2(List<String> contactList, List<FarmerModel> farmers, Context context) {
         this.contactList = contactList;
         this.farmers = farmers;
         this.context = context;
@@ -43,7 +43,7 @@ public class Adapter_contact_list_2 extends RecyclerView.Adapter<Adapter_contact
 
     @Override
     public void onBindViewHolder(@NonNull Adapter_contact_list_2_ViewHolder adapter_contact_list_2_viewHolder, final int i) {
-        adapter_contact_list_2_viewHolder.contact_in_card.setText(contactList[i]);
+        adapter_contact_list_2_viewHolder.contact_in_card.setText(contactList.get(i));
 
         adapter_contact_list_2_viewHolder.farmerId.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,7 +57,7 @@ public class Adapter_contact_list_2 extends RecyclerView.Adapter<Adapter_contact
 
         Glide.with(context).load(farmers.get(i).getImage()).into(adapter_contact_list_2_viewHolder.farmerImg);
 
-        if (i==((contactList.length)-1)){
+        if (i==((contactList.size())-1)){
             adapter_contact_list_2_viewHolder.line_divider.setVisibility(View.GONE);
         }
 
@@ -65,7 +65,7 @@ public class Adapter_contact_list_2 extends RecyclerView.Adapter<Adapter_contact
 
     @Override
     public int getItemCount() {
-        return contactList.length;
+        return contactList.size();
     }
 
     public class Adapter_contact_list_2_ViewHolder extends RecyclerView.ViewHolder{

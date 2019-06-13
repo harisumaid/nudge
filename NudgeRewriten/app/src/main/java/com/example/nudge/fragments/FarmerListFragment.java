@@ -128,10 +128,7 @@ public class FarmerListFragment extends Fragment {
                             return farmerSort(farmer1, farmer2);
                         }
                     });
-
-                    for(FarmerModel f: farmers) {
-                        Log.i("Farmers are ",f.getName());
-                    }
+                    
                     Log.d("capitalize", "onSuccess: "+ data);
                     adapter_contact_list_1.notifyDataSetChanged();
                 }
@@ -181,14 +178,10 @@ public class FarmerListFragment extends Fragment {
 
         farmerlist_searchview.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
 
-            List<String> filterOnChange = data;
-            List<FarmerModel> filterFarmers = farmers;
-
-            List<String> filterOnSubmit = new ArrayList<>();
-            List<FarmerModel> farmerModels = new ArrayList<>();
-
             @Override
             public boolean onQueryTextSubmit(String s) {
+
+                List<FarmerModel> farmerModels = new ArrayList<>();
                 List<String> filterData = new ArrayList<>();
                 int index=0;
                 for (String filter : data
@@ -196,7 +189,7 @@ public class FarmerListFragment extends Fragment {
                     if (s.length()<=filter.length()) {
 
                         if (s.equalsIgnoreCase(filter.substring(0, s.length()))) {
-                            farmerModels.add(filterFarmers.get(index));
+                            farmerModels.add(farmers.get(index));
                             filterData.add(filter);
                         }
                     }
@@ -218,6 +211,8 @@ public class FarmerListFragment extends Fragment {
             @Override
             public boolean onQueryTextChange(String s) {
 
+                List<FarmerModel> farmerModels = new ArrayList<>();
+
                 List<String> filterData = new ArrayList<>();
                 int index=0;
                     for (String filter : data
@@ -233,6 +228,7 @@ public class FarmerListFragment extends Fragment {
                         Log.i("search", "filter: " + filterData);
                     }
 
+                Log.i("Names", " "+filterData);
                     if (!filterData.isEmpty())
                         farmer_contact_recycler.setAdapter(new Adapter_contact_list_1(filterData,farmerModels,context));
 
@@ -243,6 +239,9 @@ public class FarmerListFragment extends Fragment {
                         toast.show();
                         farmer_contact_recycler.setAdapter(new Adapter_contact_list_1(data,farmers,context));
                     }
+
+
+
                     return false;
             }
 

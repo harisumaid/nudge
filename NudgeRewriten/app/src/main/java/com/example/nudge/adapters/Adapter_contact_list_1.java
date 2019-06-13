@@ -76,18 +76,20 @@ public class Adapter_contact_list_1 extends RecyclerView.Adapter<Adapter_contact
         Log.i("Data", "onBindViewHolder: " + chars);
         index = 0;
         for(String name: newData) {
-              if(name.charAt(0)==chars.get(i))
-              {
-                  cardList.add(name);
-                  farmers.add(list.get(index));
-              }
-              index++;
+            if(name.charAt(0)==chars.get(i))
+            {
+                cardList.add(name);
+                farmers.add(list.get(index));
+            }
+            index++;
         }
 
         for(String d: cardList)
             Log.i("Names are : ",chars.get(i)+" " +d);
 
-        adapter_contact_list_1_viewHolder.contact_list_recycler.setAdapter(new Adapter_contact_list_2((cardList.toArray(new String[(cardList.size())])),farmers,context));
+        Log.i("Names are", " "+farmers.get(0));
+
+        adapter_contact_list_1_viewHolder.contact_list_recycler.setAdapter(new Adapter_contact_list_2(cardList,farmers,context));
 
         adapter_contact_list_1_viewHolder.contact_list_alphabet.setText(String.valueOf(cardList.get(0).charAt(0)));
     }
@@ -99,7 +101,6 @@ public class Adapter_contact_list_1 extends RecyclerView.Adapter<Adapter_contact
         for(String c: data) {
             hash_Set.add(c.charAt(0));
         }
-
         return hash_Set.size();
     }
 
