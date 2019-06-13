@@ -210,6 +210,7 @@ public class SelectFarmerActivity extends AppCompatActivity {
 
                 returnIntent.putStringArrayListExtra("result", (ArrayList<String>) ids);
                 setResult(Activity.RESULT_OK,returnIntent);
+
                 placeOrder(ids);
                 finish();
 
