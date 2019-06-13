@@ -139,7 +139,7 @@ public class LoginActivity extends AppCompatActivity {
                             agentId.edit().putString("agentId",agent.getId()).apply();
                             agentId.edit().putString("agentName",agent.getName()).apply();
                             agentId.edit().putString("agentImg",agent.getImage()).apply();
-                            agentId.edit().putString("agentFarmersCnt",agent.getFarmers_count()).apply();
+                            agentId.edit().putString("agentFarmersCnt", agent.getFarmers_count()).apply();
                             agentId.edit().putString("agentLevel",agent.getLevel()).apply();
                             agentId.edit().putInt("agentPts",agent.getPoints()).apply();
 
