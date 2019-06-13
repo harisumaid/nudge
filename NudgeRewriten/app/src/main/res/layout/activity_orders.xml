@@ -49,6 +49,7 @@
         android:layout_marginTop="21dp"
         android:background="@drawable/order_button"
         android:focusableInTouchMode="true"
+
         android:text="Ordered"
         android:textAllCaps="false"
         android:textColor="@drawable/text_color"
