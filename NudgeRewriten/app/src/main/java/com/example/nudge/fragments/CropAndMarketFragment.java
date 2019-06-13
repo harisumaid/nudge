@@ -17,6 +17,10 @@ import android.widget.Toast;
 import com.example.nudge.R;
 import com.example.nudge.adapters.RecyclerAdapter;
 import com.example.nudge.models.crop;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,14 +28,15 @@ import java.util.List;
 public class CropAndMarketFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private int[] images = {R.drawable.component, R.drawable.component1, R.drawable.component2,
-            R.drawable.component3, R.drawable.component4, R.drawable.component5};
+
     private ArrayList<String> croplist=new ArrayList<>();
+
     private RecyclerView.LayoutManager layoutManager;
+
     private RecyclerAdapter adapter;
     private SearchView crop_market_searchview;
     private ArrayList<crop> cropsList = new ArrayList<>();
-    Context context = getActivity();
+    FirebaseFirestore db;
 
     @Nullable
     @Override
@@ -42,56 +47,61 @@ public class CropAndMarketFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 
-//        {"Potato", "Chilly", "Tomato", "Carrot", "Onion", "Garlic"}
-
-        croplist.add("Potato");
-        croplist.add("Chilly");
-        croplist.add("Tomato");
-        croplist.add("Carrot");
-        croplist.add("Onion");
-        croplist.add("Garlic");
-
-
         super.onViewCreated(view, savedInstanceState);
+
+        db = FirebaseFirestore.getInstance();
 
         recyclerView = view.findViewById(R.id.recyclerview);
 
-        layoutManager = new GridLayoutManager(context, 2);
+        layoutManager = new GridLayoutManager(getActivity(), 2);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
 
-        int count = 0;
-        for (String name : croplist) {
-            cropsList.add(new crop(name, images[count]));
-            count++;
-        }
-
-        adapter = new RecyclerAdapter(cropsList,context);
+        adapter = new RecyclerAdapter(cropsList,getActivity());
         recyclerView.setAdapter(adapter);
         crop_market_searchview = view.findViewById(R.id.crop_market_searchview);
 
+        db.collection("crops").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                         if(!queryDocumentSnapshots.isEmpty()) {
+
+                             List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+                             for(DocumentSnapshot d: list) {
+                                 crop cropModel  = d.toObject(crop.class);
+                                 cropsList.add(cropModel);
+                                 croplist.add(cropModel.getName());
+                             }
+                             adapter.notifyDataSetChanged();
+                         }
+            }
+        });
+
         crop_market_searchview.setOnQueryTextListener(new android.support.v7.widget.SearchView.OnQueryTextListener() {
 
-            List<String> filterOnChange = croplist;
-
-            List<String> filterOnSubmit = new ArrayList<>();
+            List<crop> filterOnSubmit = new ArrayList<>();
             @Override
             public boolean onQueryTextSubmit(String s) {
-                ArrayList<crop> filterData = new ArrayList<>();
-                for (String filter : croplist
-                ) {
+                ArrayList<String> filterData = new ArrayList<>();
+                for (String filter : croplist) {
                     if (s.length()<=filter.length()) {
 
                         if (s.equalsIgnoreCase(filter.substring(0, s.length()))) {
-                            filterData.add(new crop(filter,images[croplist.indexOf(filter)]));
+                            filterData.add(filter);
                         }
                     }
                     Log.i("search", "filter: " + filterData);
                 }
 
+                for(String name: filterData) {
+                    for(crop c: cropsList)
+                        if(name.compareTo(c.getName())==0)
+                            filterOnSubmit.add(c);
+                }
+
                 if (!filterData.isEmpty()){
 
-                    adapter = new RecyclerAdapter(filterData,context);
+                    adapter = new RecyclerAdapter(filterOnSubmit,getContext());
                     recyclerView.setAdapter(adapter);
 
 
@@ -99,7 +109,7 @@ public class CropAndMarketFragment extends Fragment {
                 else {
                     Toast toast=Toast.makeText(getContext(), "No Crops found", Toast.LENGTH_SHORT);
                     toast.show();
-                    adapter = new RecyclerAdapter(cropsList,context);
+                    adapter = new RecyclerAdapter(cropsList,getContext());
                     recyclerView.setAdapter(adapter);
                 }
                 return false;
@@ -107,29 +117,35 @@ public class CropAndMarketFragment extends Fragment {
 
             @Override
             public boolean onQueryTextChange(String s) {
-                ArrayList<crop> filterData = new ArrayList<>();
-                for (String filter : croplist
-                ) {
+                ArrayList<String> filterData = new ArrayList<>();
+                for (String filter : croplist) {
                     if (s.length()<=filter.length()) {
-
                         if (s.equalsIgnoreCase(filter.substring(0, s.length()))) {
-                            filterData.add(new crop(filter,images[croplist.indexOf(filter)]));
+                            if (s.equalsIgnoreCase(filter.substring(0, s.length()))) {
+                                filterData.add(filter);
+                            }
                         }
                     }
                     Log.i("search", "filter: " + filterData);
                 }
 
+                filterOnSubmit.clear();
+                for(String name: filterData) {
+                    for(crop c: cropsList)
+                        if(name.compareTo(c.getName())==0)
+                        {  filterOnSubmit.add(c);
+                            break; }
+                }
+
+
                 if (!filterData.isEmpty()){
-
-                    adapter = new RecyclerAdapter(filterData,context);
+                    adapter = new RecyclerAdapter(filterOnSubmit,getContext());
                     recyclerView.setAdapter(adapter);
-
-
                 }
                 else {
-                    Toast toast=Toast.makeText(getContext(), "No contacts found", Toast.LENGTH_SHORT);
+                    Toast toast=Toast.makeText(getContext(), "No crops found", Toast.LENGTH_SHORT);
                     toast.show();
-                    adapter = new RecyclerAdapter(cropsList,context);
+                    adapter = new RecyclerAdapter(cropsList,getContext());
                     recyclerView.setAdapter(adapter);
                 }
                 return false;

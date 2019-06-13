@@ -90,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             progressBar.setVisibility(View.INVISIBLE);
                             if (task.isSuccessful()) {
+                                Toast.makeText(LoginActivity.this, "Phone Verified.", Toast.LENGTH_SHORT).show();
                                 // Sign in success, update UI with the signed-in user's information
                             } else {
                                 // If sign in fails, display a message to the user.
@@ -126,15 +127,6 @@ public class LoginActivity extends AppCompatActivity {
                     for(DocumentSnapshot d: list) {
 
                         final AgentModel agent = d.toObject(AgentModel.class);
-
-                        db.collection("agents").document(agent.getId()).collection("farmers").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                            @Override
-                            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                                db.collection("agents").document(agent.getId()).update(
-                                        "farmers_count",queryDocumentSnapshots.size()
-                                );
-                            }
-                        });
 
                         if(agent.getId().equals(id)) {
 

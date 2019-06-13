@@ -115,7 +115,6 @@ public class SelectFarmerActivity extends AppCompatActivity {
 
                         farmers = sortedFarmers;
 
-                        Toast.makeText(context, "starting to fetch", Toast.LENGTH_SHORT).show();
 
         // Calling the adapter that would show the list of farmers to select from
                         dialogRecycler.setLayoutManager(new LinearLayoutManager(context));

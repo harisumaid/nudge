@@ -116,7 +116,6 @@ public class Adapter_select_farmer_1 extends RecyclerView.Adapter<Adapter_select
     }
 
     public List<String> getNames() {
-        Toast.makeText(context, "Adapter1 function exec", Toast.LENGTH_SHORT).show();
 
         return adapter.uploadVisits();
     }

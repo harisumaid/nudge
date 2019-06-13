@@ -100,7 +100,6 @@ public class ViewStore extends AppCompatActivity {
                             Log.d("firebase", "Error getting documents: ", task.getException());
                         }
                         prodRcvId.setAdapter(adapter);
-                        Toast.makeText(ViewStore.this, "fetched", Toast.LENGTH_SHORT).show();
                         viewstore_base_layout.animate()
                                 .alpha(1f)
                                 .setDuration(shortAnimationDuration)

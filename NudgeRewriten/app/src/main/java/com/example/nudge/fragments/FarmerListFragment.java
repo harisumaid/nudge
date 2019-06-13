@@ -128,7 +128,7 @@ public class FarmerListFragment extends Fragment {
                             return farmerSort(farmer1, farmer2);
                         }
                     });
-                    
+
                     Log.d("capitalize", "onSuccess: "+ data);
                     adapter_contact_list_1.notifyDataSetChanged();
                 }
@@ -215,34 +215,34 @@ public class FarmerListFragment extends Fragment {
 
                 List<String> filterData = new ArrayList<>();
                 int index=0;
-                    for (String filter : data
-                    ) {
-                        if (s.length()<=filter.length()) {
+                for (String filter : data
+                ) {
+                    if (s.length()<=filter.length()) {
 
-                            if (s.equalsIgnoreCase(filter.substring(0, s.length()))) {
-                                farmerModels.add(farmers.get(index));
-                                filterData.add(filter);
-                            }
-                            index++;
+                        if (s.equalsIgnoreCase(filter.substring(0, s.length()))) {
+                            farmerModels.add(farmers.get(index));
+                            filterData.add(filter);
                         }
-                        Log.i("search", "filter: " + filterData);
+                        index++;
                     }
+                    Log.i("search", "filter: " + filterData);
+                }
 
                 Log.i("Names", " "+filterData);
-                    if (!filterData.isEmpty())
-                        farmer_contact_recycler.setAdapter(new Adapter_contact_list_1(filterData,farmerModels,context));
+                if (!filterData.isEmpty())
+                    farmer_contact_recycler.setAdapter(new Adapter_contact_list_1(filterData,farmerModels,context));
 
-                    else {
+                else {
 
-                        Toast toast=Toast.makeText(getContext(), "No contacts found", Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.HORIZONTAL_GRAVITY_MASK,0,0);
-                        toast.show();
-                        farmer_contact_recycler.setAdapter(new Adapter_contact_list_1(data,farmers,context));
-                    }
+                    Toast toast=Toast.makeText(getContext(), "No contacts found", Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.HORIZONTAL_GRAVITY_MASK,0,0);
+                    toast.show();
+                    farmer_contact_recycler.setAdapter(new Adapter_contact_list_1(data,farmers,context));
+                }
 
 
 
-                    return false;
+                return false;
             }
 
         });

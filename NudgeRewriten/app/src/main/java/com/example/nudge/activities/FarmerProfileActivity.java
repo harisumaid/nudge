@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,6 +45,7 @@ public class FarmerProfileActivity extends AppCompatActivity {
     TextView scheduleBtn,primaryNo,secondaryNo,farmerPlace,storeBtn;
     RecyclerView scheduledCropRcv;
     ScheduledCropsAdapter adapter;
+    ProgressBar farmerPb;
 
     List<CropModel> crops = new ArrayList<>();
     SharedPrefUtils sharedPrefUtils;
@@ -68,6 +70,8 @@ public class FarmerProfileActivity extends AppCompatActivity {
         collapsingToolbarLayout2.setExpandedTitleTypeface(TyperRoboto.ROBOTO_REGULAR());
         farmerImg = findViewById(R.id.farmer_photo);
         db = FirebaseFirestore.getInstance();
+
+        farmerPb = findViewById(R.id.profile_pb);
 
         storeBtn = findViewById(R.id.store_btn);
 
@@ -111,6 +115,7 @@ public class FarmerProfileActivity extends AppCompatActivity {
                             crops.add(crop);
                             adapter.notifyDataSetChanged();
                         }
+                        farmerPb.setVisibility(View.INVISIBLE);
                     }
                 }
             });

@@ -24,6 +24,7 @@ import com.example.nudge.models.AgentModel;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.rhexgomez.typer.roboto.TyperRoboto;
 import com.squareup.picasso.Picasso;
 
@@ -125,6 +126,14 @@ public class ProfileFragment extends Fragment {
 
                 agentId.edit().putString("agentName",agent.getName()).apply();
                 agentId.edit().putString("agentImg",agent.getImage()).apply();
+
+                db.collection("agents").document(agentId.getString("agentId","")).collection("farmers").get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+                    @Override
+                    public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                        db.collection("agents").document(agentId.getString("agentId","")).update("farmers_count",Integer.toString(queryDocumentSnapshots.size()));
+                    }
+                });
+
                 agentId.edit().putString("agentFarmersCnt",agent.getFarmers_count()).apply();
                 agentId.edit().putString("agentLevel",agent.getLevel()).apply();
                 agentId.edit().putInt("agentPts",agent.getPoints()).apply();

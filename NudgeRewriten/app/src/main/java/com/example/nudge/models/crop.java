@@ -3,57 +3,49 @@ package com.example.nudge.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class crop implements Parcelable {
+public class crop {
 
-    private String cropname;
-    private int cropimage;
+    private String name,image,desc,id;
 
-    public crop(String cropname, int cropimage) {
-        this.setCropname(cropname);
-        this.setCropimage(cropimage);
+    public crop() {
     }
 
-    protected crop(Parcel in) {
-        cropname = in.readString();
-        cropimage = in.readInt();
+    public String getName() {
+        return name;
     }
 
-    public static final Creator<crop> CREATOR = new Creator<crop>() {
-        @Override
-        public crop createFromParcel(Parcel in) {
-            return new crop(in);
-        }
-
-        @Override
-        public crop[] newArray(int size) {
-            return new crop[size];
-        }
-    };
-
-    public String getCropname() {
-        return cropname;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public void setCropname(String cropname) {
-        this.cropname = cropname;
+    public String getImage() {
+        return image;
     }
 
-    public int getCropimage() {
-        return cropimage;
+    public void setImage(String image) {
+        this.image = image;
     }
 
-    public void setCropimage(int cropimage) {
-        this.cropimage = cropimage;
+    public String getDesc() {
+        return desc;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public void setDesc(String desc) {
+        this.desc = desc;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(cropname);
-        dest.writeInt(cropimage);
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public crop(String name, String image, String desc, String id) {
+        this.name = name;
+        this.image = image;
+        this.desc = desc;
+        this.id = id;
     }
 }

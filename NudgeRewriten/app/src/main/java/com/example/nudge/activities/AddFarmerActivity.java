@@ -259,7 +259,6 @@ public class AddFarmerActivity extends AppCompatActivity {
 
                         Toast.makeText(AddFarmerActivity.this, "Adding farmer.", Toast.LENGTH_SHORT).show();
 
-                        Log.i("TAG","It reached here.");
                         uploadPb.setVisibility(View.VISIBLE);
                         String name = farmerName.getText().toString();
                         String primary_contact_number = farmerNo1.getText().toString();
@@ -268,11 +267,10 @@ public class AddFarmerActivity extends AppCompatActivity {
                         String size = farmSize.getText().toString();
                         final String[] id = new String[1];
 
-                        Log.i("TAG","It reached here at 2");
                         if(latitude==0 || longitude ==0) {
-                            Toast.makeText(AddFarmerActivity.this, "Geo-tagging the image please Wait.", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddFarmerActivity.this, "Geo-tagging image. Wait for sometime", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(AddFarmerActivity.this, "Please click the check button after sometime.", Toast.LENGTH_SHORT).show();
                         } else {
-                            Log.i("TAG","It reached here at 13");
                             uploadPb.setVisibility(View.VISIBLE);
                             FarmerModel farmer = new FarmerModel(name,primary_contact_number,secondary_contact_number,"",address,size,"",new GeoPoint(latitude,longitude));
 
@@ -290,7 +288,6 @@ public class AddFarmerActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(DocumentReference documentReference) {
                                             id[0] = documentReference.getId();
-                                            Log.i("TAG","THis is important.");
                                             final StorageReference farmerImgRef = mStorageRef.child("farmerImgs/"+id[0]+".jpg");
 
                                             UploadTask uploadTask = farmerImgRef.putBytes(data);
@@ -448,6 +445,8 @@ public class AddFarmerActivity extends AppCompatActivity {
                 locationManager.removeUpdates(mLocationListener);
                 longitude = location.getLongitude();
                 latitude = location.getLatitude();
+
+
 
                 Toast toast = Toast.makeText(getApplicationContext(), "Image Successfully Geo-tagged.", Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.TOP|Gravity.CENTER_HORIZONTAL, 0, 0);
