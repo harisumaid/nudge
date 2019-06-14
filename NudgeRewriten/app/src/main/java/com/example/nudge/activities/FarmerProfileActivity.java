@@ -111,30 +111,15 @@ public class FarmerProfileActivity extends AppCompatActivity {
             secondaryNo.setText("+91 "+farmerInfo.getSecondary_contact_number());
             farmerPlace.setText(farmerInfo.getAddress());
 
-            CollectionReference scheduledCrops = db.collection("agents/"+sharedPrefUtils.readAgentId()+"/farmers/"+farmerInfo.getId()+"/crops");
-
-            scheduledCrops.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
-                @Override
-                public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                    if(!queryDocumentSnapshots.isEmpty()) {
-                        List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
-
-                        for(DocumentSnapshot d: list) {
-                            CropModel crop = d.toObject(CropModel.class);
-                            crops.add(crop);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }
-                    farmerPb.setVisibility(View.INVISIBLE);
-                }
-            });
-
             scheduleBtn = findViewById(R.id.schedule_btn);
             scheduledCropRcv = findViewById(R.id.scheduled_crop_rcv);
 
             scheduledCropRcv.setLayoutManager(new GridLayoutManager(this,2));
             adapter = new ScheduledCropsAdapter(crops,this,farmerInfo.getId());
             scheduledCropRcv.setAdapter(adapter);
+
+
+            fetchCropsList();
 
             scheduleBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -190,6 +175,29 @@ public class FarmerProfileActivity extends AppCompatActivity {
 
     }
 
+    public void fetchCropsList(){
+        crops.clear();
+        CollectionReference scheduledCrops = db.collection("agents/"+sharedPrefUtils.readAgentId()+"/farmers/"+farmerInfo.getId()+"/crops");
+
+        scheduledCrops.get().addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
+            @Override
+            public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
+                if(!queryDocumentSnapshots.isEmpty()) {
+                    List<DocumentSnapshot> list = queryDocumentSnapshots.getDocuments();
+
+                    for(DocumentSnapshot d: list) {
+                        CropModel crop = d.toObject(CropModel.class);
+                        crops.add(crop);
+                        Toast.makeText(context, "Crops Data updated", Toast.LENGTH_SHORT).show();
+                        adapter.notifyDataSetChanged();
+                    }
+                }
+                farmerPb.setVisibility(View.INVISIBLE);
+            }
+        });
+
+    }
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actions, menu);
@@ -197,7 +205,8 @@ public class FarmerProfileActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onRestart() {
-        super.onRestart();
+    protected void onResume() {
+        super.onResume();
+        fetchCropsList();
     }
 }

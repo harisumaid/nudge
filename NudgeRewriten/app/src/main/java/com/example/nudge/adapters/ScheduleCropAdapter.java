@@ -101,7 +101,8 @@ public class ScheduleCropAdapter extends RecyclerView.Adapter<ScheduleCropAdapte
                             "cropImage","https://practicalfarmers.org/wp-content/uploads/2019/03/IMG_1759-1024x683.jpg"
                     );
                     Toast.makeText(context, "Crops has been added.", Toast.LENGTH_SHORT).show();
-                    ((ScheduleCropActivity)context).onBackPressed();
+                    ScheduleCropActivity scheduleCropActivity = ((ScheduleCropActivity)context);
+                    scheduleCropActivity.onBackPressed();
                 }
             });
             Log.i("Crops are ", crop.getSeedingDate().toString());

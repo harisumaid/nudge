@@ -1,5 +1,6 @@
 package com.example.nudge.activities;
 
+import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -22,6 +23,7 @@ public class ScheduleCropActivity extends AppCompatActivity {
     RecyclerView.LayoutManager layoutManager;
     ScheduleCropAdapter adapter;
     Button saveBtn;
+    public Context context;
     ProgressBar cropProgressBar;
 
     int count = 1;
@@ -29,6 +31,8 @@ public class ScheduleCropActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_schedule_crop);
+
+        context =this;
 
         recyclerView = findViewById(R.id.scheduled_crop_recycler);
         layoutManager = new LinearLayoutManager(this);
