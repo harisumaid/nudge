@@ -234,13 +234,9 @@ public class SelectFarmerActivity extends AppCompatActivity {
     public void placeOrder(List<String> sendOrder){
 
         productId = getIntent().getExtras().getString("productId");
-        c=Calendar.getInstance();
-        orderedDate = String.valueOf(c.getTime());
+
         for (final String individualFarmerId:sendOrder) {
 
-
-            Log.d("firebase1", "placeOrder: " + individualFarmerId);
-    //            HAVE TO ADD orderPlaced LIST TO SHARED PREFERENCE FOR REFLECTING IN ORDERS ACTIVITY
             db.collection("agents")
                     .document(sharedPrefUtils.readAgentId())
                     .collection("farmers")
@@ -252,7 +248,7 @@ public class SelectFarmerActivity extends AppCompatActivity {
                     if (task.isSuccessful()){
                         Log.d("firebase1", "onComplete: name : "+task.getResult().get("name"));
 
-                        orderModel = new OrderModel((String)task.getResult().get("name"),productId,orderedDate,individualFarmerId,"",null,null,null);
+                        orderModel = new OrderModel((String)task.getResult().get("name"),productId,productId,individualFarmerId,"",null,null,null);
                         setOrderAndName(orderModel);
                     }
                 }
@@ -276,7 +272,6 @@ public class SelectFarmerActivity extends AppCompatActivity {
         Log.d("firebase", "setOrder: key"+key);
         orderModel.setOrderedId(key);
 
-
         db.collection("products")
                 .document(orderModel.getOrderedProductId())
                 .get()
@@ -299,7 +294,6 @@ public class SelectFarmerActivity extends AppCompatActivity {
                             if (getIntent().getExtras().getString("fromActivity").equals("FarmerProfileActivity")){
                                 finish();
                             }
-
 
                                 Toast.makeText(SelectFarmerActivity.this, "order placed", Toast.LENGTH_SHORT).show();
                         }

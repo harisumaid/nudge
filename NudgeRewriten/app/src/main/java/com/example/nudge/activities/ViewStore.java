@@ -156,87 +156,8 @@ public class ViewStore extends AppCompatActivity {
             intent.putExtra("fromActivity","ViewStoreActivity");//to know from where SelectFarmer activity was called
         }
         intent.putExtra("productId", productId);
-//        intent.putExtra("product_receiving_date",receivingDate(productId));
         startActivity(intent);
 
     }
-
-//    public String receivingDate(String productId){
-//        final String[] orderReceivingDate = {""};
-//        //       fetching the receiving date value by the productId supplied from placeOrder() method.
-//
-//        db.collection("products").document(productId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-//
-//                if (task.isSuccessful()) {
-//                    // Document found in the offline cache
-//                    DocumentSnapshot document = task.getResult();
-//                    orderReceivingDate[0] = (String) document.get("receiving_date");
-//                    Log.d("firebase", "onReceivingDate "+ orderReceivingDate[0]);
-//                } else {
-//                    Log.d("error", "Cached get failed: ", task.getException());
-//                }
-//
-//            }
-//        });
-//
-//        return orderReceivingDate[0];
-//    }
-
-
-
-
-//        THIS PART HAS BEEN COMENTED OUT DUE TO FAILURE WHILE SHOWING SELECT_FARMER AS DIALOG
-//        MAY BE DONE LATER
-
-//        select_farmer=new ArrayList<>();//supplying the name of farmer after fetching
-//
-//        selectFarmer.setContentView(R.layout.activity_select_farmer);
-//
-//        final RecyclerView dialogRecycler = selectFarmer.findViewById(R.id.dialog_recycler);//Main recycler view
-//
-//        final Button select_farmer_cancel_button = selectFarmer.findViewById(R.id.select_farmer_cancel_button);//Cancel Button
-//        select_farmer_cancel_button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                selectFarmer.dismiss();
-//            }
-//        });
-//
-//
-////        Fetching farmers list from database
-//        db.collection("agents").document("nudge@123").collection("farmers")
-//                .get()
-//                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
-//                        if (task.isSuccessful()){
-//                            for (QueryDocumentSnapshot documentSnapshot : task.getResult()){
-//                                if (documentSnapshot.exists()) {
-//// here fetching of data from collection of farmer is done where name and image of each farmer is fetched
-//                                    Log.d("firebase", "onComplete: " + select_farmer);
-//                                    select_farmer.add((String) documentSnapshot.get("name"));
-//
-//                                }
-//                            }
-//                        }
-//                        else{
-//                            Log.d("firebase", "Error getting documents: ", task.getException());
-//                        }
-//                        Collections.sort(select_farmer);
-//                        Log.d("firebase", "onComplete: "+select_farmer);
-//                        Toast.makeText(context, "starting to fetch", Toast.LENGTH_SHORT).show();
-//
-//// Calling the adapter that would show the list of farmers to select from
-//                        dialogRecycler.setLayoutManager(new LinearLayoutManager(context));
-//                        dialogRecycler.setHasFixedSize(true);
-//                        dialogRecycler.setAdapter(new Adapter_select_farmer_1(select_farmer));
-//                    }
-//
-//                });
-//
-//        selectFarmer.show();
-
 
 }

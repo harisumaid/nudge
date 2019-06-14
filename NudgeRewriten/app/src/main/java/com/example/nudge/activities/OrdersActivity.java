@@ -27,15 +27,21 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class OrdersActivity extends AppCompatActivity {
@@ -48,7 +54,6 @@ public class OrdersActivity extends AppCompatActivity {
     ProgressBar orderProgressBar;
     public TextView ifOrderEmpty;
     List<OrderModel> orderModels = new ArrayList<>();
-    List<OrderModel> orderModelList; //Shared Predference list
     List<OrderModel> orderedList = new ArrayList<>();
     Map<String,String> imageMap = new HashMap<>();
     List<OrderModel> receivedList = new ArrayList<>();
@@ -87,7 +92,6 @@ public class OrdersActivity extends AppCompatActivity {
         flag.add(0);
 
         adapter=new OrdersAdapter(orderedList,receivedList,deliveredList,flag,context,imageMap);
-
 
 
         orderBtn.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -163,7 +167,6 @@ public class OrdersActivity extends AppCompatActivity {
                 else
                     ifOrderEmpty.setVisibility(View.GONE);
 
-
                 adapter.notifyDataSetChanged();
 
             }
@@ -176,21 +179,9 @@ public class OrdersActivity extends AppCompatActivity {
             }
         });
     }
-    public  void  loadSharedPref(){
-        Gson gson = new Gson();
-        String json = preferences.getString("OrderPlaced",null);
-        Type type = new TypeToken<ArrayList<OrderModel>>() {}.getType();
-        orderModelList= gson.fromJson(json,type);
-        if(orderModelList == null)
-        {
-            orderModelList.add(new OrderModel("Name","ProductName","OrderDate","FarmerId","OrderId","OrderReceivingDate","OrderDeliveryDate","OrderProductName"));
-        }
-        Log.d("sharedpref", "loadSharedPref: "+orderModelList.get(0));
-   //     adapter.updateAdapter(orderModelList);
-        adapter.notifyDataSetChanged();
-    }
 
     public void loadFirestore(){
+
         db.collection("agents")
                 .document(sharedPrefUtils.readAgentId())
                 .collection("orders")
@@ -205,6 +196,7 @@ public class OrdersActivity extends AppCompatActivity {
                                 if (documentSnapshot.exists()) {
                                     OrderModel model = documentSnapshot.toObject(OrderModel.class);
                                     Log.d("click", "onComplete: "+model.getOrderedReceivingDate());
+
                                     if (model.getOrderedReceivingDate()==null) {
                                         orderedList.add(model);
                                     }
@@ -215,10 +207,12 @@ public class OrdersActivity extends AppCompatActivity {
                                         deliveredList.add(model);
                                     }
                                     fetchImage(model);
-
-                                    orderModels.add(model);
                                 }
                             }
+
+                            Collections.sort(orderedList,Collections.<OrderModel>reverseOrder());
+                            Collections.sort(receivedList,Collections.<OrderModel>reverseOrder());
+                            Collections.sort(deliveredList,Collections.<OrderModel>reverseOrder());
                             orderRcv.setVisibility(View.VISIBLE);
 
                             orderProgressBar.animate()
@@ -254,7 +248,6 @@ public class OrdersActivity extends AppCompatActivity {
 
                                         }
                                     });
-
                             orderRcv.setAdapter(adapter);
                         }
                         else{
