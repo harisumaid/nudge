@@ -168,7 +168,6 @@ public class Adapter_select_farmer_2 extends RecyclerView.Adapter<Adapter_select
 
     public List<String> uploadVisits() {
         flag=2;
-        Toast.makeText(context, "Total ids are "+ids.size(), Toast.LENGTH_SHORT).show();
         return ids;
     }
 }

@@ -124,8 +124,8 @@ public class FarmerProfileActivity extends AppCompatActivity {
                             crops.add(crop);
                             adapter.notifyDataSetChanged();
                         }
-                        farmerPb.setVisibility(View.INVISIBLE);
                     }
+                    farmerPb.setVisibility(View.INVISIBLE);
                 }
             });
 
@@ -142,7 +142,6 @@ public class FarmerProfileActivity extends AppCompatActivity {
 
                     Intent intent = new Intent(getApplicationContext(),ScheduleCropActivity.class);
                     intent.putExtra("FARMERID",farmerInfo.getId());
-
                     startActivity(intent);
                 }
             });
@@ -195,5 +194,10 @@ public class FarmerProfileActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.actions, menu);
         return true;
+    }
+
+    @Override
+    public void onRestart() {
+        super.onRestart();
     }
 }

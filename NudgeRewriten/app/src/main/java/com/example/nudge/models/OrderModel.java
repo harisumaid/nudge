@@ -3,60 +3,33 @@ package com.example.nudge.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class OrderModel implements Parcelable {
+import com.google.firebase.firestore.ServerTimestamp;
+
+import java.util.Date;
+
+public class OrderModel implements Comparable<OrderModel> {
     String orderedFarmerName;
-    String orderedDate;
     String orderedProductName;
     String orderedProductId;
     String orderedFarmerId;
     String orderedId;
-    String orderedReceivingDate;
-    String orderedDeliveryDate;
 
-    public OrderModel(String orderedFarmerName, String orderedProductId, String orderedDate, String orderedFarmerId, String orderedId, String orderedReceivingDate, String orderedDeliveryDate,String orderedProductName){
-        this.orderedFarmerName = orderedFarmerName;
-        this.orderedProductId = orderedProductId;
-        this.orderedDate = orderedDate;
-        this.orderedFarmerId = orderedFarmerId;
-        this.orderedId = orderedId;
-        this.orderedDeliveryDate = orderedDeliveryDate;
-        this.orderedReceivingDate=orderedReceivingDate;
-        this.orderedProductName=orderedProductName;
+    private @ServerTimestamp Date orderedDate;
+    private Date orderedReceivingDate;
+    private Date orderedDeliveryDate;
+
+    public OrderModel() {
     }
 
     protected OrderModel(Parcel in) {
         orderedFarmerName = in.readString();
-        orderedDate = in.readString();
+        orderedProductName = in.readString();
         orderedProductId = in.readString();
         orderedFarmerId = in.readString();
         orderedId = in.readString();
-        orderedReceivingDate = in.readString();
-        orderedDeliveryDate = in.readString();
-        orderedProductName = in.readString();
     }
 
-    public OrderModel(){
-
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(orderedFarmerName);
-        dest.writeString(orderedDate);
-        dest.writeString(orderedProductId);
-        dest.writeString(orderedFarmerId);
-        dest.writeString(orderedId);
-        dest.writeString(orderedDeliveryDate);
-        dest.writeString(orderedReceivingDate);
-        dest.writeString(orderedProductName);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
-    }
-
-    public static final Creator<OrderModel> CREATOR = new Creator<OrderModel>() {
+    public static final Parcelable.Creator<OrderModel> CREATOR = new Parcelable.Creator<OrderModel>() {
         @Override
         public OrderModel createFromParcel(Parcel in) {
             return new OrderModel(in);
@@ -68,12 +41,36 @@ public class OrderModel implements Parcelable {
         }
     };
 
-    public void setOrderedProductName(String orderedProductName) {
-        this.orderedProductName = orderedProductName;
+    public String getOrderedFarmerName() {
+        return orderedFarmerName;
+    }
+
+    public void setOrderedFarmerName(String orderedFarmerName) {
+        this.orderedFarmerName = orderedFarmerName;
     }
 
     public String getOrderedProductName() {
         return orderedProductName;
+    }
+
+    public void setOrderedProductName(String orderedProductName) {
+        this.orderedProductName = orderedProductName;
+    }
+
+    public String getOrderedProductId() {
+        return orderedProductId;
+    }
+
+    public void setOrderedProductId(String orderedProductId) {
+        this.orderedProductId = orderedProductId;
+    }
+
+    public String getOrderedFarmerId() {
+        return orderedFarmerId;
+    }
+
+    public void setOrderedFarmerId(String orderedFarmerId) {
+        this.orderedFarmerId = orderedFarmerId;
     }
 
     public String getOrderedId() {
@@ -84,62 +81,43 @@ public class OrderModel implements Parcelable {
         this.orderedId = orderedId;
     }
 
-    public String getOrderedFarmerName() {
-        return orderedFarmerName;
+    public Date getOrderedDate() {
+        return orderedDate;
     }
 
-    public String getOrderedProductId() {
-        return orderedProductId;
-    }
-
-    public String getOrderedDate(){
-//        SimpleDateFormat simpleDateFormat= new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy",Locale.ENGLISH);
-//        Date date = simpleDateFormat.parse(orderedDate);
-//        Calendar calendar = Calendar.getInstance();
-//        calendar.setTime(date);
-        return orderedDate.substring(0,10)+", "+orderedDate.substring(orderedDate.lastIndexOf(" "));
-    }
-
-    public void setOrderedFarmerName(String orderedFarmerName) {
-        this.orderedFarmerName = orderedFarmerName;
-    }
-
-    public void setOrderedFarmerId(String orderedFarmerId) {
-        this.orderedFarmerId = orderedFarmerId;
-    }
-
-    public String getOrderedFarmerId() {
-        return orderedFarmerId;
-    }
-
-    public void setOrderedProductId(String orderedProductId) {
-        this.orderedProductId = orderedProductId;
-    }
-
-    public void setOrderedReceivingDate(String orderedReceivingDate) {
-        this.orderedReceivingDate = orderedReceivingDate;
-    }
-
-    public void setOrderedDeliveryDate(String orderedDeliveryDate) {
-        this.orderedDeliveryDate = orderedDeliveryDate;
-    }
-
-    public String getOrderedReceivingDate() {
-        if (orderedReceivingDate!=null)
-        return orderedReceivingDate.substring(0,10)+", "+orderedReceivingDate.substring(orderedReceivingDate.lastIndexOf(" "));
-        else
-            return orderedReceivingDate;
-    }
-
-    public String getOrderedDeliveryDate() {
-        if (orderedDeliveryDate!=null)
-        return orderedDeliveryDate.substring(0,10)+", "+orderedDeliveryDate.substring(orderedDeliveryDate.lastIndexOf(" "));
-        else
-            return orderedDeliveryDate;
-    }
-
-    public void setOrderedDate(String orderedDate) {
+    public void setOrderedDate(Date orderedDate) {
         this.orderedDate = orderedDate;
     }
 
+    public Date getOrderedReceivingDate() {
+        return orderedReceivingDate;
+    }
+
+    public void setOrderedReceivingDate(Date orderedReceivingDate) {
+        this.orderedReceivingDate = orderedReceivingDate;
+    }
+
+    public Date getOrderedDeliveryDate() {
+        return orderedDeliveryDate;
+    }
+
+    public void setOrderedDeliveryDate(Date orderedDeliveryDate) {
+        this.orderedDeliveryDate = orderedDeliveryDate;
+    }
+
+    public OrderModel(String orderedFarmerName, String orderedProductName, String orderedProductId, String orderedFarmerId, String orderedId, Date orderedDate, Date orderedReceivingDate, Date orderedDeliveryDate) {
+        this.orderedFarmerName = orderedFarmerName;
+        this.orderedProductName = orderedProductName;
+        this.orderedProductId = orderedProductId;
+        this.orderedFarmerId = orderedFarmerId;
+        this.orderedId = orderedId;
+        this.orderedDate = orderedDate;
+        this.orderedReceivingDate = orderedReceivingDate;
+        this.orderedDeliveryDate = orderedDeliveryDate;
+    }
+
+    @Override
+    public int compareTo(OrderModel o) {
+        return getOrderedDate().compareTo(o.getOrderedDate());
+    }
 }

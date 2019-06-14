@@ -70,7 +70,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.myViewHold
 
             myViewHolder.checksvg.setVisibility(View.GONE);
             myViewHolder.orderBtn.setVisibility(View.GONE);
-            myViewHolder.orderDate.setText((modelList.get(i).getOrderedDate()));
+            myViewHolder.orderDate.setText((modelList.get(i).getOrderedDate()).toString());
 
         }
         if (flag.get(0)==1) {           //for received tab
@@ -78,14 +78,14 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.myViewHold
             myViewHolder.checksvg.setVisibility(View.VISIBLE);
             myViewHolder.orderBtn.setVisibility(View.VISIBLE);
             myViewHolder.orderBtn.setText("Click here if delivered");
-            myViewHolder.orderDate.setText((modelList.get(i).getOrderedReceivingDate()));
+            myViewHolder.orderDate.setText((modelList.get(i).getOrderedReceivingDate()).toString());
             myViewHolder.checksvg.setImageResource(R.drawable.ic_baseline_check_circle_24px);
             myViewHolder.datesvg.setImageResource(R.drawable.ic_local_shipping_black);
             myViewHolder.orderBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     OrdersActivity ordersActivity = (OrdersActivity)context;
-                    receivedOrderModels.get(i).setOrderedDeliveryDate(String.valueOf(Calendar.getInstance().getTime()));
+                    receivedOrderModels.get(i).setOrderedDeliveryDate(Calendar.getInstance().getTime());
                     deliveredOrderModels.add(receivedOrderModels.get(i));
                     ordersActivity.uploadDeliveryDate(receivedOrderModels.get(i));
                     receivedOrderModels.remove(i);
@@ -103,7 +103,7 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.myViewHold
             myViewHolder.checksvg.setVisibility(View.VISIBLE);
             myViewHolder.datesvg.setImageResource(R.drawable.ic_local_shipping_shipped_24dp);
             myViewHolder.checksvg.setImageResource(R.drawable.ic_check_circle_checked_24dp);
-            myViewHolder.orderDate.setText((modelList.get(i).getOrderedDeliveryDate()));
+            myViewHolder.orderDate.setText(modelList.get(i).getOrderedDeliveryDate().toString());
             myViewHolder.orderBtn.setText("Product Delivered");
 
         }
@@ -113,8 +113,6 @@ public class OrdersAdapter extends RecyclerView.Adapter<OrdersAdapter.myViewHold
         if(currentPosition == i) {
             myViewHolder.childView.setVisibility(View.VISIBLE);
         }
-
-
 
         myViewHolder.orderCard.setOnClickListener(new View.OnClickListener() {
             @Override

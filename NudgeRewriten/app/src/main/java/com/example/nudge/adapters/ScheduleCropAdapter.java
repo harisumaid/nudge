@@ -98,7 +98,7 @@ public class ScheduleCropAdapter extends RecyclerView.Adapter<ScheduleCropAdapte
                 public void onSuccess(DocumentReference documentReference) {
                     crops.document(documentReference.getId()).update(
                       "id",documentReference.getId(),
-                            "cropImage","https://www.ruralmarketing.in/sites/default/files/styles/large/public/odisha-to-have-a-new-agriculture-technology-park-at-rourkela.jpg?itok=RH-zOiuR"
+                            "cropImage","https://practicalfarmers.org/wp-content/uploads/2019/03/IMG_1759-1024x683.jpg"
                     );
                     Toast.makeText(context, "Crops has been added.", Toast.LENGTH_SHORT).show();
                     ((ScheduleCropActivity)context).onBackPressed();
